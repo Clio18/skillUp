@@ -1,4 +1,6 @@
-package com.obolonyk.skillUp.reflection;
+package com.obolonyk.skillUp.reflection.entity;
+
+import com.obolonyk.skillUp.reflection.entity.carInterface.Driveable;
 
 import java.util.Objects;
 

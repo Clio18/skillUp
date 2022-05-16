@@ -1,4 +1,6 @@
-package com.obolonyk.skillUp.reflection;
+package com.obolonyk.skillUp.reflection.entity;
+
+import com.obolonyk.skillUp.reflection.entity.Car;
 
 public class Truck extends Car {
 

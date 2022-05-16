@@ -1,5 +1,7 @@
 package com.obolonyk.skillUp.reflection;
 
+import com.obolonyk.skillUp.reflection.entity.Ford;
+
 import java.lang.reflect.*;
 import java.util.*;
 
