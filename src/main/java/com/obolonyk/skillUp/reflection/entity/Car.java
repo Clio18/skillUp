@@ -1,6 +1,7 @@
 package com.obolonyk.skillUp.reflection.entity;
 
 public class Car {
+
     private int wheels;
 
     public Car() {

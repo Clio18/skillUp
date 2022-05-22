@@ -5,6 +5,7 @@ import com.obolonyk.skillUp.reflection.entity.carInterface.Driveable;
 import java.util.Objects;
 
 public class Ford extends Truck implements Driveable {
+
     private String type;
     private boolean isRunAndDrive;
     private int passengers;
