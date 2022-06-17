@@ -1,4 +1,4 @@
-package com.obolonyk.skillUp.reflection.util;
+package com.obolonyk.skillup.reflection.util;
 
 public class Util {
 

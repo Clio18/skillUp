@@ -1,11 +1,11 @@
-package com.obolonyk.skillUp.reflection;
+package com.obolonyk.skillup.reflection;
 
-import com.obolonyk.skillUp.reflection.entity.Ford;
+import com.obolonyk.skillup.reflection.entity.Ford;
 
 import java.lang.reflect.*;
 import java.util.*;
 
-public class Main {
+public class Reflection {
 
     //Метод принимает класс и возвращает созданный объект этого класса
     public static <T> T giveTheObjectFromTheClass(Class<T> clazz) throws ReflectiveOperationException {
@@ -63,7 +63,7 @@ public class Main {
         return list;
     }
 
-    public void giveTheAllFinalMethodsSignaturesAndShowIt(Object object) {
+    void giveTheAllFinalMethodsSignaturesAndShowIt(Object object) {
         List<String> methodsSignatures = giveTheAllFinalMethodsSignatures(object);
         for (String methodsSignature : methodsSignatures) {
             System.out.println(methodsSignature);
@@ -115,6 +115,27 @@ public class Main {
         return list;
     }
 
+    //Метод принимает объект и меняет всего его приватные поля на их нулевые значение (null, 0, false etc)
+    public static <T> T getObjectWithDefaultValuesOfFields(T t) throws IllegalAccessException {
+        Class<?> clazz = t.getClass();
+        Field[] fields = clazz.getDeclaredFields();
+        for (Field field : fields) {
+            field.setAccessible(true);
+            if (Modifier.isPrivate(field.getModifiers())) {
+                if (field.getType().equals(int.class)) {
+                    field.set(t, 0);
+                } else if (field.getType().equals(double.class)) {
+                    field.set(t, 0.0);
+                } else if (field.getType().equals(String.class)) {
+                    field.set(t, null);
+                } else if (field.getType().equals(boolean.class)) {
+                    field.set(t, false);
+                }
+            }
+        }
+        return t;
+    }
+
 
     private static Class<?>[] getAllFieldsClasses(Class<?> type) {
         List<Field> gatheredFields = getFields(type);
@@ -151,27 +172,6 @@ public class Main {
         return gatheredFields;
     }
 
-    //Метод принимает объект и меняет всего его приватные поля на их нулевые значение (null, 0, false etc)
-    public static <T> T getObjectWithDefaultValuesOfFields(T t) throws IllegalAccessException {
-        Class<?> clazz = t.getClass();
-        Field[] fields = clazz.getDeclaredFields();
-        for (Field field : fields) {
-            field.setAccessible(true);
-            if (Modifier.isPrivate(field.getModifiers())) {
-                if (field.getType().equals(int.class)) {
-                    field.set(t, 0);
-                } else if (field.getType().equals(double.class)) {
-                    field.set(t, 0.0);
-                } else if (field.getType().equals(String.class)) {
-                    field.set(t, null);
-                } else if (field.getType().equals(boolean.class)) {
-                    field.set(t, false);
-                }
-            }
-        }
-        return t;
-    }
-
     private static Object[] getDefaultValuesForFields(Class<?>[] allFieldsClasses) {
         List<Object> defaultValues = new ArrayList<>();
         for (Class<?> fieldsClass : allFieldsClasses) {
@@ -187,6 +187,5 @@ public class Main {
         }
         return convertListToArray(defaultValues, Object.class);
     }
-
 
 }

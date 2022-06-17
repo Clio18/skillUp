@@ -1,7 +1,7 @@
-package com.obolonyk.skillUp.reflection;
+package com.obolonyk.skillup.reflection;
 
-import com.obolonyk.skillUp.reflection.entity.Ford;
-import com.obolonyk.skillUp.reflection.util.Util;
+import com.obolonyk.skillup.reflection.entity.Ford;
+import com.obolonyk.skillup.reflection.util.Util;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,7 +12,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class MainTest {
+class ReflectionTest {
 
     Ford fordWithDefaultValueOfTheField;
     Ford fordWithDefaultConstructor;
@@ -29,14 +29,14 @@ class MainTest {
     @Test
     @DisplayName("Test Give The Object From The Class And Check The Class")
     void testGiveTheObjectFromTheClassAndCheckTheClass() throws ReflectiveOperationException {
-        Ford objectFromTheClass = Main.giveTheObjectFromTheClass(Ford.class);
+        Ford objectFromTheClass = Reflection.giveTheObjectFromTheClass(Ford.class);
         assertEquals(fordWithDefaultValueOfTheField.getClass(), objectFromTheClass.getClass());
     }
 
     @Test
     @DisplayName("Test Give The Object From The Class And Check Equivalence Of Field Value")
     void testGiveTheObjectFromTheClassAndCheckEquivalenceOfFieldValue() throws ReflectiveOperationException {
-        Ford objectFromTheClass = Main.giveTheObjectFromTheClass(Ford.class);
+        Ford objectFromTheClass = Reflection.giveTheObjectFromTheClass(Ford.class);
         assertEquals(fordWithDefaultValueOfTheField.getType(), objectFromTheClass.getType());
         assertEquals(fordWithDefaultValueOfTheField.getWeight(), objectFromTheClass.getWeight());
         assertEquals(fordWithDefaultValueOfTheField.getWheels(), objectFromTheClass.getWheels());
@@ -47,21 +47,21 @@ class MainTest {
     @Test
     @DisplayName("Test Give The Object From The Class And Check The Equivalence")
     void testGiveTheObjectFromTheClassAndCheckTheEquivalence() throws ReflectiveOperationException {
-        Ford objectFromTheClass = Main.giveTheObjectFromTheClass(Ford.class);
+        Ford objectFromTheClass = Reflection.giveTheObjectFromTheClass(Ford.class);
         assertTrue(objectFromTheClass.equals(fordWithDefaultValueOfTheField));
     }
 
     @Test
     @DisplayName("Test Give The Object From The Class With Default Constructor And Check The Class")
     void testGiveTheObjectFromTheClassWithDefaultConstructorAndCheckTheClass() throws ReflectiveOperationException {
-        Ford objectFromTheClass = Main.giveTheObjectFromTheClassWithDefaultConstructor(Ford.class);
+        Ford objectFromTheClass = Reflection.giveTheObjectFromTheClassWithDefaultConstructor(Ford.class);
         assertEquals(fordWithDefaultConstructor.getClass(), objectFromTheClass.getClass());
     }
 
     @Test
     @DisplayName("Test Give The Object From The Class With Default Constructor And Check The Equivalence")
     void testGiveTheObjectFromTheClassWithDefaultConstructorAndCheckTheEquivalence() throws ReflectiveOperationException {
-        Ford objectFromTheClass = Main.giveTheObjectFromTheClassWithDefaultConstructor(Ford.class);
+        Ford objectFromTheClass = Reflection.giveTheObjectFromTheClassWithDefaultConstructor(Ford.class);
         assertTrue(objectFromTheClass.equals(fordWithDefaultConstructor));
     }
 
@@ -69,14 +69,14 @@ class MainTest {
     @Test
     @DisplayName("Test The All Methods Without Parameters And Check The Amount Of Such Methods")
     void testTheAllMethodsWithoutParametersAndCheckTheAmountOfSuchMethods() throws ReflectiveOperationException {
-        Map<String, Object> map = Main.giveTheAllMethodsWithoutParameters(util);
+        Map<String, Object> map = Reflection.giveTheAllMethodsWithoutParameters(util);
         assertEquals(3, map.size());
     }
 
     @Test
     @DisplayName("Test Get The All Methods Without Parameters And Check The Returned Value")
     void testGetTheAllMethodsWithoutParametersAndCheckTheReturnedValue() throws ReflectiveOperationException {
-        Map<String, Object> map = Main.giveTheAllMethodsWithoutParameters(util);
+        Map<String, Object> map = Reflection.giveTheAllMethodsWithoutParameters(util);
         double distance = Util.getTheDistance();
         String license = Util.keepMyLicense();
         assertEquals(distance, map.get("getTheDistance"));
@@ -86,21 +86,21 @@ class MainTest {
     @Test
     @DisplayName("Test Get The All Final Methods Signatures And Check The Size Of The List")
     void testGetTheAllFinalMethodsSignaturesAndCheckTheSizeOfTheList() {
-        List<String> methodsSignatures = Main.giveTheAllFinalMethodsSignatures(util);
+        List<String> methodsSignatures = Reflection.giveTheAllFinalMethodsSignatures(util);
         assertEquals(2, methodsSignatures.size());
     }
 
     @Test
     @DisplayName("Test The All Not Public Methods And Check The Size Of The List")
     void testTheAllNotPublicMethodsAndCheckTheSizeOfTheList() throws ReflectiveOperationException {
-        List<Method> methods = Main.giveTheAllNotPublicMethods(Util.class);
+        List<Method> methods = Reflection.giveTheAllNotPublicMethods(Util.class);
         assertEquals(3, methods.size());
     }
 
     @Test
     @DisplayName("Test Get All Ancestor Classes And Interfaces And Check List Size")
     void testGetAllAncestorClassesAndInterfacesAndCheckListSize() {
-        List<String> list = Main.getAllAncestorClassesAndInterfaces(Ford.class);
+        List<String> list = Reflection.getAllAncestorClassesAndInterfaces(Ford.class);
         assertEquals(4, list.size());
     }
 
@@ -108,7 +108,7 @@ class MainTest {
     @DisplayName("Test Get Default Values For Fields And Check Object Has Changed")
     void testGetDefaultValuesForFieldsAndCheckObjectHasChanged() throws IllegalAccessException {
         Ford ford = new Ford("Race", true, 10);
-        Ford object = Main.getObjectWithDefaultValuesOfFields(ford);
+        Ford object = Reflection.getObjectWithDefaultValuesOfFields(ford);
         assertEquals(null, object.getType());
         assertEquals(false, object.isRunAndDrive());
         assertEquals(0, object.getWheels());
