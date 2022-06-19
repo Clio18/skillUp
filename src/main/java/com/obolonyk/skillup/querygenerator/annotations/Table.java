@@ -4,5 +4,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DBId {
+public @interface Table {
+    String name() default "";
 }

@@ -3,6 +3,8 @@ package com.obolonyk.skillup.querygenerator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.lang.reflect.InvocationTargetException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class QueryGeneratorTest {
@@ -10,7 +12,7 @@ class QueryGeneratorTest {
     @Test
     @DisplayName("Test findAll and return query")
     void testFindAll() {
-        QueryGenerator<User> queryGenerator = new QueryGeneratorCustomImpl();
+        QueryGenerator queryGenerator = new QueryGeneratorCustomImpl();
         String query = queryGenerator.findAll(User.class);
         String expectedQuery = "SELECT id, user_name, age FROM users;";
         assertEquals(expectedQuery, query);
@@ -18,8 +20,8 @@ class QueryGeneratorTest {
 
     @Test
     @DisplayName("Test insert and return query")
-    void testInsert() {
-        QueryGenerator<User> queryGenerator = new QueryGeneratorCustomImpl();
+    void testInsert() throws IllegalAccessException {
+        QueryGenerator queryGenerator = new QueryGeneratorCustomImpl();
         User user = new User();
         user.setId(1L);
         user.setName("Tom");
@@ -34,8 +36,8 @@ class QueryGeneratorTest {
 
     @Test
     @DisplayName("Test update and return query")
-    void testUpdate() throws IllegalAccessException {
-        QueryGenerator<User> queryGenerator = new QueryGeneratorCustomImpl();
+    void testUpdate() throws IllegalAccessException, InvocationTargetException {
+        QueryGenerator queryGenerator = new QueryGeneratorCustomImpl();
         User user = new User();
         user.setId(1L);
         user.setName("Tom");
@@ -51,7 +53,7 @@ class QueryGeneratorTest {
     @Test
     @DisplayName("Test findById and return query")
     void testFindById() {
-        QueryGenerator<User> queryGenerator = new QueryGeneratorCustomImpl();
+        QueryGenerator queryGenerator = new QueryGeneratorCustomImpl();
         long id = 1L;
         String query = (queryGenerator).findById(User.class, id);
         String expectedQuery = "SELECT id, user_name, age FROM users WHERE id = " + "'" + id + "'" + ";";
@@ -61,7 +63,7 @@ class QueryGeneratorTest {
     @Test
     @DisplayName("Test delete and return query")
     void testDelete() {
-        QueryGenerator<User> queryGenerator = new QueryGeneratorCustomImpl();
+        QueryGenerator queryGenerator = new QueryGeneratorCustomImpl();
         long id = 1L;
         String query = queryGenerator.delete(User.class, id);
         String expectedQuery = "DELETE FROM users WHERE id = " + "'" + id + "'" + ";";

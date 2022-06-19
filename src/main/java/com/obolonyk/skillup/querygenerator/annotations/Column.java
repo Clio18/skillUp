@@ -4,7 +4,8 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DBColumn {
+public @interface Column {
     String name() default "";
+
     int number() default 0;
 }

@@ -1,18 +1,18 @@
 package com.obolonyk.skillup.querygenerator;
 
-import com.obolonyk.skillup.querygenerator.annotations.DBColumn;
-import com.obolonyk.skillup.querygenerator.annotations.DBId;
-import com.obolonyk.skillup.querygenerator.annotations.DBTable;
+import com.obolonyk.skillup.querygenerator.annotations.Column;
+import com.obolonyk.skillup.querygenerator.annotations.Id;
+import com.obolonyk.skillup.querygenerator.annotations.Table;
 
-@DBTable (name = "users")
+@Table(name = "users")
 public class User {
 
-    @DBId
-    @DBColumn
+    @Id
+    @Column
     private long id;
-    @DBColumn (name = "user_name")
+    @Column(name = "user_name")
     private String name;
-    @DBColumn
+    @Column
     private int age;
 
     public long getId() {

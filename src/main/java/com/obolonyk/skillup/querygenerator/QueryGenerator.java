@@ -1,14 +1,17 @@
 package com.obolonyk.skillup.querygenerator;
 
-public interface QueryGenerator<T> {
+import java.io.Serializable;
+import java.lang.reflect.InvocationTargetException;
 
-    String findAll(Class<T> t);
+public interface QueryGenerator {
 
-    String insert(T t);
+    String findAll(Class<?> type);
 
-    String update(T t) throws IllegalAccessException;
+    String insert(Object value) throws IllegalAccessException;
 
-    String findById(Class<T> t, long id);
+    String update(Object value) throws IllegalAccessException, InvocationTargetException;
 
-    String delete(Class<T> t, long id);
+    String findById(Class<?> type, Serializable id);
+
+    String delete(Class<?> type, Serializable id);
 }
