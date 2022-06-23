@@ -37,13 +37,13 @@ public class FileManager {
         return counter;
     }
 
-    static File[] getListOfFiles (String path){
-        if (path==null){
+    static File[] getListOfFiles(String path) {
+        if (path == null) {
             throw new IllegalArgumentException("Please provide a path");
         }
         File file = new File(path);
         File[] listFiles = file.listFiles();
-        if (listFiles==null){
+        if (listFiles == null) {
             throw new NullPointerException("The files do not exist on provided path " + path);
         }
         return listFiles;
@@ -54,9 +54,13 @@ public class FileManager {
     //Параметр from - путь к файлу или папке,
     // параметр to - путь к папке куда будет производиться копирование.
 
+
     //- метод по перемещению папок и файлов.
     //Параметр from - путь к файлу или папке, параметр to -
     // путь к папке куда будет производиться копирование
+    public static boolean move(String from, String to) {
+        return new File(from).renameTo(new File(to));
+    }
 
 
 }

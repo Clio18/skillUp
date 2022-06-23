@@ -33,4 +33,10 @@ class FileManagerTest {
         assertEquals("The files do not exist on provided path " + "wrong/path", nullPointerException.getMessage());
     }
 
+    @Test
+    @DisplayName("Test Move With The Same From And ToP ath And Return False")
+    void testMoveWithTheSameFromAndToPathAndReturnFalse(){
+       assertFalse(FileManager.move("some/path", "some/path"));
+    }
+
 }

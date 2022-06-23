@@ -96,4 +96,37 @@ class FileManagerITest {
         int files = FileManager.countFiles("src/main/resources/empty");
         assertEquals(0, files);
     }
+
+    @Test
+    @DisplayName("Test Move And Check If True")
+    void testMoveAndCheckIfTrue() {
+        assertTrue(FileManager.move("src/main/resources/empty", "src/main/resources/new/newempty"));
+    }
+
+    @Test
+    @DisplayName("Test Move And Check If Dir Is Gone")
+    void testMoveAndCheckIfDirIsGone() {
+        File empty = new File("src/main/resources/empty");
+        assertNotNull(empty.listFiles());
+        FileManager.move("src/main/resources/empty", "src/main/resources/new/newempty");
+        assertNull(empty.listFiles());
+        File newempty = new File("src/main/resources/new/newempty");
+        newempty.delete();
+    }
+
+    @Test
+    @DisplayName("Test Move And Check If Target Dir Became Plus One File")
+    void testMoveAndCheckIfTargetDirBecamePlusOneFile() {
+        File moveTo = new File("src/main/resources/move");
+        moveTo.mkdir();
+        File targetForMove = new File("src/main/resources/new/target");
+        moveTo.mkdir();
+
+        int dirs = FileManager.countDirs("src/main/resources/new");
+        FileManager.move("src/main/resources/move", "src/main/resources/new/target");
+        int dirsPlusOne = FileManager.countDirs("src/main/resources/new");
+        assertEquals(dirs + 1, dirsPlusOne);
+
+        targetForMove.delete();
+    }
 }
