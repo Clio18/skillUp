@@ -77,6 +77,13 @@ class FileManagerITest {
     }
 
     @Test
+    @DisplayName("Test CountFiles")
+    void testCountFiles() {
+        int files = FileManager.countFiles("src/main/resources/new");
+        assertEquals(6, files);
+    }
+
+    @Test
     @DisplayName("Test CountDirs On Empty Dir")
     void testCountDirsOnEmptyDir() {
         int dirs = FileManager.countDirs("src/main/resources/empty");

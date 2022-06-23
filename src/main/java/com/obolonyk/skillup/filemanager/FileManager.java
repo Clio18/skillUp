@@ -4,11 +4,14 @@ import java.io.File;
 
 public class FileManager {
 
+    private FileManager() {
+        throw new IllegalStateException("Utility class");
+    }
+
     // public static int countFiles(String path) - принимает путь к папке,
     // возвращает количество файлов в папке и всех подпапках по пути
     public static int countFiles(String path) {
-        File file = new File(path);
-        File[] listFiles = file.listFiles();
+        File[] listFiles = getListOfFiles(path);
         int counter = 0;
         for (File listFile : listFiles) {
             if (!listFile.isDirectory()) {
@@ -23,8 +26,7 @@ public class FileManager {
     // public static int countDirs(String path) - принимает путь к папке,
     // возвращает количество папок в папке и всех подпапках по пути
     public static int countDirs(String path) {
-        File file = new File(path);
-        File[] listFiles = file.listFiles();
+        File[] listFiles = getListOfFiles(path);
         int counter = 0;
         for (File listFile : listFiles) {
             if (listFile.isDirectory()) {
@@ -33,6 +35,18 @@ public class FileManager {
             }
         }
         return counter;
+    }
+
+    static File[] getListOfFiles (String path){
+        if (path==null){
+            throw new IllegalArgumentException("Please provide a path");
+        }
+        File file = new File(path);
+        File[] listFiles = file.listFiles();
+        if (listFiles==null){
+            throw new NullPointerException("The files do not exist on provided path " + path);
+        }
+        return listFiles;
     }
 
 
