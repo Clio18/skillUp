@@ -1,6 +1,6 @@
 package com.obolonyk.skillup.filemanager;
 
-import java.io.File;
+import java.io.*;
 
 public class FileManager {
 
@@ -37,6 +37,37 @@ public class FileManager {
         return counter;
     }
 
+    // - метод по копированию папок и файлов.
+    //Параметр from - путь к файлу или папке,
+    // параметр to - путь к папке куда будет производиться копирование.
+    public static void copy(String from, String to) throws IOException {
+        File[] files = getListOfFiles(from);
+        for (File element : files) {
+            String newPath = to + File.separator + element.getName();
+            if (element.isFile()) {
+                byte[] bytes;
+                try (InputStream inputStream = new FileInputStream(element.getAbsoluteFile());
+                     OutputStream outputStream = new FileOutputStream(newPath)) {
+                    bytes = inputStream.readAllBytes();
+                    outputStream.write(bytes);
+                }
+            } else {
+                File file = new File(newPath);
+                if (!file.mkdir()) {
+                    throw new NullPointerException("The folder was not created on path: " + newPath);
+                }
+                copy(from + File.separator + element.getName(), to + File.separator + element.getName());
+            }
+        }
+    }
+
+    //- метод по перемещению папок и файлов.
+    //Параметр from - путь к файлу или папке, параметр to -
+    // путь к папке куда будет производиться копирование
+    public static boolean move(String from, String to) {
+        return new File(from).renameTo(new File(to));
+    }
+
     static File[] getListOfFiles(String path) {
         if (path == null) {
             throw new IllegalArgumentException("Please provide a path");
@@ -48,19 +79,4 @@ public class FileManager {
         }
         return listFiles;
     }
-
-
-    // - метод по копированию папок и файлов.
-    //Параметр from - путь к файлу или папке,
-    // параметр to - путь к папке куда будет производиться копирование.
-
-
-    //- метод по перемещению папок и файлов.
-    //Параметр from - путь к файлу или папке, параметр to -
-    // путь к папке куда будет производиться копирование
-    public static boolean move(String from, String to) {
-        return new File(from).renameTo(new File(to));
-    }
-
-
 }

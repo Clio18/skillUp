@@ -7,8 +7,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
 class FileManagerITest {
 
@@ -22,6 +21,7 @@ class FileManagerITest {
 
         File file = new File("src/main/resources/new/file.txt");
         file.createNewFile();
+
         File file1 = new File("src/main/resources/new/file1.txt");
         file1.createNewFile();
         File file2 = new File("src/main/resources/new/file2.txt");
@@ -67,6 +67,29 @@ class FileManagerITest {
 
         File emptyDir = new File("src/main/resources/empty");
         emptyDir.delete();
+
+
+        // For copy tests
+        File wen5 = new File("src/main/resources/wen/new1/new2/file5.txt");
+        wen5.delete();
+        File wenDir2 = new File("src/main/resources/wen/new1/new2");
+        wenDir2.delete();
+
+        File wen3 = new File("src/main/resources/wen/new1/file3.txt");
+        wen3.delete();
+        File wen4 = new File("src/main/resources/wen/new1/file4.txt");
+        wen4.delete();
+        File wenDir1 = new File("src/main/resources/wen/new1");
+        wenDir1.delete();
+
+        File wen = new File("src/main/resources/wen/file.txt");
+        wen.delete();
+        File wen1 = new File("src/main/resources/wen/file1.txt");
+        wen1.delete();
+        File wen2 = new File("src/main/resources/wen/file2.txt");
+        wen2.delete();
+        File wenDir = new File("src/main/resources/wen");
+        wenDir.delete();
     }
 
     @Test
@@ -100,7 +123,7 @@ class FileManagerITest {
     @Test
     @DisplayName("Test Move And Check If True")
     void testMoveAndCheckIfTrue() {
-        assertTrue(FileManager.move("src/main/resources/empty", "src/main/resources/new/newempty"));
+        assertTrue(FileManager.move("src/main/resources/empty", "src/main/resources/new/newEmpty"));
     }
 
     @Test
@@ -108,10 +131,10 @@ class FileManagerITest {
     void testMoveAndCheckIfDirIsGone() {
         File empty = new File("src/main/resources/empty");
         assertNotNull(empty.listFiles());
-        FileManager.move("src/main/resources/empty", "src/main/resources/new/newempty");
+        FileManager.move("src/main/resources/empty", "src/main/resources/new/newEmpty");
         assertNull(empty.listFiles());
-        File newempty = new File("src/main/resources/new/newempty");
-        newempty.delete();
+        File newEmpty = new File("src/main/resources/new/newEmpty");
+        newEmpty.delete();
     }
 
     @Test
@@ -128,5 +151,37 @@ class FileManagerITest {
         assertEquals(dirs + 1, dirsPlusOne);
 
         targetForMove.delete();
+    }
+
+    @Test
+    @DisplayName("Test Copy And Check Files Count")
+    void testCopyAndCheckFilesCount() throws IOException {
+        File newDir = new File("src/main/resources/wen");
+        newDir.mkdir();
+        FileManager.copy("src/main/resources/new", "src/main/resources/wen");
+        assertEquals(FileManager.countFiles("src/main/resources/new"), FileManager.countFiles("src/main/resources/wen"));
+    }
+
+    @Test
+    @DisplayName("Test Copy And Check Dirs Count")
+    void testCopyAndCheckDirsCount() throws IOException {
+        File newDir = new File("src/main/resources/wen");
+        newDir.mkdir();
+        FileManager.copy("src/main/resources/new", "src/main/resources/wen");
+        assertEquals(FileManager.countDirs("src/main/resources/new"), FileManager.countDirs("src/main/resources/wen"));
+    }
+
+    @Test
+    @DisplayName("Test Copy And Check Files Text")
+    void testCopyAndCheckFilesText() throws IOException {
+        File newDir = new File("src/main/resources/wen");
+        newDir.mkdir();
+        OutputStream outputStream = new FileOutputStream("src/main/resources/new/file.txt");
+        String word = "Java";
+        outputStream.write(word.getBytes());
+        FileManager.copy("src/main/resources/new", "src/main/resources/wen");
+        InputStream inputStream = new FileInputStream("src/main/resources/wen/file.txt");
+        String copyWord = new String(inputStream.readAllBytes());
+        assertEquals(word, copyWord);
     }
 }
