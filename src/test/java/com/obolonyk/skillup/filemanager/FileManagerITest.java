@@ -188,13 +188,13 @@ class FileManagerITest {
     @Test
     @DisplayName("Test Copy And Check Files Count")
     void testCopyAndCheckFilesCount2() throws IOException {
-        File newDir = new File("www/www");
-        File sameDir = new File("new/www");
+        File newDir = new File("www" + File.separator + "www");
+        File sameDir = new File("new" + File.separator + "www");
         newDir.mkdir();
         sameDir.mkdir();
 
         NullPointerException nullPointerException = assertThrows(NullPointerException.class, () -> FileManager.copy("www", "new"));
-        assertEquals("The folder was not created on path: " + "new/www", nullPointerException.getMessage());
+        assertEquals("The folder was not created on path: " + "new" + File.separator + "www", nullPointerException.getMessage());
         sameDir.delete();
     }
 }
