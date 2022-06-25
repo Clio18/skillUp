@@ -3,6 +3,8 @@ package com.obolonyk.skillup.filemanager;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class FileManagerTest {
@@ -23,7 +25,7 @@ class FileManagerTest {
     @Test
     @DisplayName("Test GetListOfFiles If Path Incorrect And Check Exception")
     void testGetListOfFilesIfPathIsIncorrectAndCheckException (){
-        assertThrows(NullPointerException.class,  () -> FileManager.getListOfFiles("wrong/path"));
+        assertThrows(NullPointerException.class,  () -> FileManager.getListOfFiles("wrong" + File.separator + "path"));
     }
 
     @Test
@@ -36,7 +38,7 @@ class FileManagerTest {
     @Test
     @DisplayName("Test Move With The Same From And ToP ath And Return False")
     void testMoveWithTheSameFromAndToPathAndReturnFalse(){
-       assertFalse(FileManager.move("some/path", "some/path"));
+       assertFalse(FileManager.move("some" + File.separator + "path", "some" + File.separator + "path"));
     }
 
 }
