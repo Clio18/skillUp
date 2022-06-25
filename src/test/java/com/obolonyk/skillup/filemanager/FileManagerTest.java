@@ -36,7 +36,7 @@ class FileManagerTest {
     }
 
     @Test
-    @DisplayName("Test Move With The Same From And ToP ath And Return False")
+    @DisplayName("Test Move With The Same From And To Path And Return False")
     void testMoveWithTheSameFromAndToPathAndReturnFalse(){
        assertFalse(FileManager.move("some" + File.separator + "path", "some" + File.separator + "path"));
     }
