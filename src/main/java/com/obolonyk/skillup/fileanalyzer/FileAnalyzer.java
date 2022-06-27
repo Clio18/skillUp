@@ -31,21 +31,14 @@ public class FileAnalyzer {
         }
     }
 
-    public void printSentences() {
-
-        List<String> sentencesWithWord = this.getSentencesWithWord(text, word);
-        for (String sentence : sentencesWithWord) {
-            System.out.println(sentence);
-        }
-    }
-
-    public int getTotalCount() {
+    public FileInfo analyze () {
         List<String> sentencesWithWord = this.getSentencesWithWord(text, word);
         int totalCounter = 0;
         for (String sentence : sentencesWithWord) {
             totalCounter = totalCounter + getCounter(sentence, word);
         }
-        return totalCounter;
+        FileInfo fileInfo = new FileInfo(totalCounter, sentencesWithWord);
+        return fileInfo;
     }
 
     List<String> getSentencesWithWord(String text, String word) {

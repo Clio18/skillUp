@@ -16,7 +16,7 @@ class FileAnalyzerITest {
     void testGetTotalCountWithUpperCaseWord() throws IOException {
         String word = "Java";
         FileAnalyzer fileAnalyzer = new FileAnalyzer(path, word);
-        assertEquals(11, fileAnalyzer.getTotalCount());
+        assertEquals(11, fileAnalyzer.analyze().getCount());
     }
 
     @Test
@@ -24,7 +24,7 @@ class FileAnalyzerITest {
     void testGetTotalCountWithLowerCaseWord() throws IOException {
         String word = "java";
         FileAnalyzer fileAnalyzer = new FileAnalyzer(path, word);
-        assertEquals(11, fileAnalyzer.getTotalCount());
+        assertEquals(11, fileAnalyzer.analyze().getCount());
     }
 
     @Test
