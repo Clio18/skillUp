@@ -9,7 +9,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FileAnalyzerITest {
 
-    String path = "src/main/resources/text.txt";
+    String path = "text.txt";
 
     @Test
     @DisplayName("Test GetTotalCount With UpperCase Word")
@@ -32,9 +32,9 @@ class FileAnalyzerITest {
     void testPrintSentencesAndReturnItsAmount() throws IOException {
         String wordJava = "java";
         FileAnalyzer fileAnalyzerForJava = new FileAnalyzer(path, wordJava);
-        assertEquals(6, fileAnalyzerForJava.printSentencesAndReturnItsAmount());
+        assertEquals(6, fileAnalyzerForJava.getSentencesAndReturnItsAmount());
         String wordBean = "bean";
         FileAnalyzer fileAnalyzerForBean = new FileAnalyzer(path, wordBean);
-        assertEquals(4, fileAnalyzerForBean.printSentencesAndReturnItsAmount());
+        assertEquals(4, fileAnalyzerForBean.getSentencesAndReturnItsAmount());
     }
 }

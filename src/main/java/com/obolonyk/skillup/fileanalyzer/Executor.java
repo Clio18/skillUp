@@ -1,5 +1,4 @@
 package com.obolonyk.skillup.fileanalyzer;
-
 import java.io.IOException;
 
 public class Executor {

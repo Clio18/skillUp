@@ -1,8 +1,10 @@
 package com.obolonyk.skillup.fileanalyzer;
 
+import java.io.BufferedReader;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,19 +28,20 @@ public class FileAnalyzer {
 
     public FileAnalyzer(String path, String word) throws IOException {
         this.word = word;
-        try (InputStream stream = new FileInputStream(path)) {
-            this.text = getAllText(stream);
+        try (FileInputStream fileInputStream = new FileInputStream(path);
+             InputStreamReader stream = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
+                     BufferedReader reader=new BufferedReader(stream)){
+            this.text = getAllText(reader);
         }
     }
 
-    public FileInfo analyze () {
+    public FileInfo analyze() {
         List<String> sentencesWithWord = this.getSentencesWithWord(text, word);
         int totalCounter = 0;
         for (String sentence : sentencesWithWord) {
             totalCounter = totalCounter + getCounter(sentence, word);
         }
-        FileInfo fileInfo = new FileInfo(totalCounter, sentencesWithWord);
-        return fileInfo;
+        return new FileInfo(totalCounter, sentencesWithWord);
     }
 
     List<String> getSentencesWithWord(String text, String word) {
@@ -56,22 +59,19 @@ public class FileAnalyzer {
         int index = sentence.indexOf(word);
         int length = word.length();
         int target = index + length;
-        byte[] bytes = sentence.getBytes();
-        if (target == bytes.length) {
+        char[] chars = sentence.toCharArray();
+        if (target == chars.length) {
             return true;
         }
-        byte spaceOrEnd = bytes[target];
+        char spaceOrEnd = chars[target];
         return spaceOrEnd == EMPTY_CHAR;
     }
 
-    String getAllText(InputStream stream) throws IOException {
-        int character = 0;
+    String getAllText(BufferedReader reader) throws IOException {
         StringBuilder stringBuilder = new StringBuilder();
-        while (character != -1) {
-            character = stream.read();
-            if (character != -1) {
-                stringBuilder.append((char) character);
-            }
+        String line;
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
         }
         return stringBuilder.toString();
     }
@@ -83,7 +83,7 @@ public class FileAnalyzer {
         return replaceAll.split(REG_EX_DOT);
     }
 
-    int printSentencesAndReturnItsAmount() {
+    int getSentencesAndReturnItsAmount() {
         List<String> sentencesWithWord = this.getSentencesWithWord(text, word);
         return sentencesWithWord.size();
     }

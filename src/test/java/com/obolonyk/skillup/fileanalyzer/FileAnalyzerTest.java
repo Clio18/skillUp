@@ -3,12 +3,9 @@ package com.obolonyk.skillup.fileanalyzer;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -61,7 +58,9 @@ class FileAnalyzerTest {
         String sentence4 = "Thus the term \"bean\" in general usage can refer to a host of different species.";
         String threeSentences = sentence1 + sentence2 + sentence3 + sentence4;
         InputStream stream = new ByteArrayInputStream(threeSentences.getBytes(StandardCharsets.UTF_8));
-        String text = fileAnalyzer.getAllText(stream);
+        InputStreamReader inputStreamReader = new InputStreamReader(stream);
+        BufferedReader reader = new BufferedReader(inputStreamReader);
+        String text = fileAnalyzer.getAllText(reader);
         assertEquals(threeSentences, text);
     }
 
@@ -71,13 +70,15 @@ class FileAnalyzerTest {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term \"bean\" in general usage can refer to a host of different species";
         InputStream stream = new ByteArrayInputStream(sentence.getBytes(StandardCharsets.UTF_8));
-        String text = fileAnalyzer.getAllText(stream);
+        InputStreamReader inputStreamReader = new InputStreamReader(stream);
+        BufferedReader reader = new BufferedReader(inputStreamReader);
+        String text = fileAnalyzer.getAllText(reader);
         assertEquals(sentence, text);
     }
 
     @Test
     @DisplayName("test GetAllSentences")
-    void testGetAllSentences(){
+    void testGetAllSentences() {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence1 = "Thus the term \"bean\" in general usage can refer to a host of different species!";
         String sentence2 = "Thus the term \"bean\" in general usage can refer to a host of different species?";
@@ -90,7 +91,7 @@ class FileAnalyzerTest {
 
     @Test
     @DisplayName("test GetSentencesWithWord If Word Exist")
-    void testGetSentencesWithWordIfWordExist (){
+    void testGetSentencesWithWordIfWordExist() {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence1 = "Thus the term bean in general usage can refer to a host of different species!";
         String sentence2 = "Thus the term in general usage can refer to a host of different species?";
@@ -103,7 +104,7 @@ class FileAnalyzerTest {
 
     @Test
     @DisplayName("test GetSentencesWithWord If Word Not Exist")
-    void testGetSentencesWithWordIfWordNotExist (){
+    void testGetSentencesWithWordIfWordNotExist() {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence1 = "Thus the term \"bean\" in general usage can refer to a host of different species!";
         String sentence2 = "Thus the term in general usage can refer to a host of different species?";
@@ -116,7 +117,7 @@ class FileAnalyzerTest {
 
     @Test
     @DisplayName("test GetSentencesWithWord If Word Part Of Other Word")
-    void testGetSentencesWithWordIfWordPartOfOtherWord (){
+    void testGetSentencesWithWordIfWordPartOfOtherWord() {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term \"bean\" in general usage can refer to a host of different species.";
         String word = "gen";
@@ -126,7 +127,7 @@ class FileAnalyzerTest {
 
     @Test
     @DisplayName("test Validation Word In Sentence Is True")
-    void testValidationWordInSentenceIsTrue (){
+    void testValidationWordInSentenceIsTrue() {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term bean in general usage can refer to a host of different species";
         String word = "bean";
@@ -135,7 +136,7 @@ class FileAnalyzerTest {
 
     @Test
     @DisplayName("test Validation Not Word Return False")
-    void testValidationNotWordReturnFalse (){
+    void testValidationNotWordReturnFalse() {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term bean in general usage can refer to a host of different species";
         String word = "gen";
@@ -144,7 +145,7 @@ class FileAnalyzerTest {
 
     @Test
     @DisplayName("test Validation Word In The End")
-    void testValidationWordInTheEnd (){
+    void testValidationWordInTheEnd() {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term bean in general usage can refer to a host of different species";
         String word = "species";
@@ -153,14 +154,12 @@ class FileAnalyzerTest {
 
     @Test
     @DisplayName("test Validation Word In The Beginning")
-    void testValidationWordInTheBeginning (){
+    void testValidationWordInTheBeginning() {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term bean in general usage can refer to a host of different species";
         String word = "Thus";
         assertTrue(fileAnalyzer.validation(sentence, word));
     }
-
-
 
 
 }
