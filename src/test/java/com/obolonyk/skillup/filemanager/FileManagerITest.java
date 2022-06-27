@@ -19,15 +19,15 @@ class FileManagerITest {
         File fileDir = new File("new");
         fileDir.mkdir();
 
-        File file = new File("new" + File.separator + "file.txt");
+        File file = new File("new", "file.txt");
         file.createNewFile();
 
-        File file1 = new File("new" + File.separator + "file1.txt");
+        File file1 = new File("new", "file1.txt");
         file1.createNewFile();
-        File file2 = new File("new" + File.separator + "file2.txt");
+        File file2 = new File("new", "file2.txt");
         file2.createNewFile();
 
-        File fileDir1 = new File("new" + File.separator + "new1");
+        File fileDir1 = new File("new", "new1");
         fileDir1.mkdir();
 
         File file3 = new File("new" + File.separator + "new1" + File.separator + "file3.txt");
@@ -53,14 +53,14 @@ class FileManagerITest {
         file3.delete();
         File file4 = new File("new" + File.separator + "new1" + File.separator + "file4.txt");
         file4.delete();
-        File fileDir1 = new File("new" + File.separator + "new1");
+        File fileDir1 = new File("new", "new1");
         fileDir1.delete();
 
-        File file = new File("new" + File.separator + "file.txt");
+        File file = new File("new", "file.txt");
         file.delete();
-        File file1 = new File("new" + File.separator + "file1.txt");
+        File file1 = new File("new", "file1.txt");
         file1.delete();
-        File file2 = new File("new" + File.separator + "file2.txt");
+        File file2 = new File("new","file2.txt");
         file2.delete();
         File fileDir = new File("new");
         fileDir.delete();
@@ -79,14 +79,14 @@ class FileManagerITest {
         wen3.delete();
         File wen4 = new File("wen" + File.separator + "new1" + File.separator + "file4.txt");
         wen4.delete();
-        File wenDir1 = new File("wen" + File.separator + "new1");
+        File wenDir1 = new File("wen", "new1");
         wenDir1.delete();
 
-        File wen = new File("wen" + File.separator + "file.txt");
+        File wen = new File("wen" , "file.txt");
         wen.delete();
-        File wen1 = new File("wen" + File.separator + "file1.txt");
+        File wen1 = new File("wen","file1.txt");
         wen1.delete();
-        File wen2 = new File("wen" + File.separator + "file2.txt");
+        File wen2 = new File("wen", "file2.txt");
         wen2.delete();
         File wenDir = new File("wen");
         wenDir.delete();
@@ -133,7 +133,7 @@ class FileManagerITest {
         assertNotNull(empty.listFiles());
         FileManager.move("empty", "new" + File.separator + "newEmpty");
         assertNull(empty.listFiles());
-        File newEmpty = new File("new" + File.separator + "newEmpty");
+        File newEmpty = new File("new", "newEmpty");
         newEmpty.delete();
     }
 
@@ -142,7 +142,7 @@ class FileManagerITest {
     void testMoveAndCheckIfTargetDirBecamePlusOneFile() {
         File moveTo = new File("move");
         moveTo.mkdir();
-        File targetForMove = new File("new" + File.separator + "target");
+        File targetForMove = new File("new", "target");
         moveTo.mkdir();
 
         int dirs = FileManager.countDirs("new");
@@ -188,8 +188,8 @@ class FileManagerITest {
     @Test
     @DisplayName("Test Copy And Check Files Count")
     void testCopyAndCheckFilesCount2() throws IOException {
-        File newDir = new File("www" + File.separator + "www");
-        File sameDir = new File("new" + File.separator + "www");
+        File newDir = new File("www", "www");
+        File sameDir = new File("new", "www");
         newDir.mkdir();
         sameDir.mkdir();
 

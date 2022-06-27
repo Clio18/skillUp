@@ -56,7 +56,7 @@ public class FileManager {
                 if (!file.mkdir()) {
                     throw new NullPointerException("The folder was not created on path: " + newPath);
                 }
-                copy(from + File.separator + element.getName(), to + File.separator + element.getName());
+                copy(from + File.separator + element.getName(), newPath);
             }
         }
     }
