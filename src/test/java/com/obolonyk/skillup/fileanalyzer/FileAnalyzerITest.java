@@ -15,26 +15,39 @@ class FileAnalyzerITest {
     @DisplayName("Test GetTotalCount With UpperCase Word")
     void testGetTotalCountWithUpperCaseWord() throws IOException {
         String word = "Java";
-        FileAnalyzer fileAnalyzer = new FileAnalyzer(path, word);
-        assertEquals(11, fileAnalyzer.analyze().getCount());
+        FileAnalyzer fileAnalyzer = new FileAnalyzer();
+        assertEquals(11, fileAnalyzer.analyze(word, path).getCount());
     }
 
     @Test
     @DisplayName("Test GetTotalCount With LowerCase Word")
     void testGetTotalCountWithLowerCaseWord() throws IOException {
         String word = "java";
-        FileAnalyzer fileAnalyzer = new FileAnalyzer(path, word);
-        assertEquals(11, fileAnalyzer.analyze().getCount());
+        FileAnalyzer fileAnalyzer = new FileAnalyzer();
+        assertEquals(11, fileAnalyzer.analyze(word, path).getCount());
     }
 
     @Test
-    @DisplayName("Test PrintSentencesAndReturnItsAmount")
-    void testPrintSentencesAndReturnItsAmount() throws IOException {
-        String wordJava = "java";
-        FileAnalyzer fileAnalyzerForJava = new FileAnalyzer(path, wordJava);
-        assertEquals(6, fileAnalyzerForJava.getSentencesAndReturnItsAmount());
-        String wordBean = "bean";
-        FileAnalyzer fileAnalyzerForBean = new FileAnalyzer(path, wordBean);
-        assertEquals(4, fileAnalyzerForBean.getSentencesAndReturnItsAmount());
+    @DisplayName("Test GetTotalCount With LowerCase Word And Check Amount Of Sentences")
+    void testGetTotalCountWithLowerCaseWordAndCheckAmountOfSentences() throws IOException {
+        String word = "java";
+        FileAnalyzer fileAnalyzer = new FileAnalyzer();
+        assertEquals(6, fileAnalyzer.analyze(word, path).getSentences().size());
+    }
+
+    @Test
+    @DisplayName("Test GetTotalCount With LowerCase Not Existing Word And Check Amount Of Sentences")
+    void testGetTotalCountWithLowerCaseNotExistingWordAndCheckAmountOfSentences() throws IOException {
+        String word = "avaj";
+        FileAnalyzer fileAnalyzer = new FileAnalyzer();
+        assertEquals(0, fileAnalyzer.analyze(word, path).getSentences().size());
+    }
+
+    @Test
+    @DisplayName("Test GetTotalCount With LowerCase Not Existing Word And Check Count")
+    void testGetTotalCountWithLowerCaseNotExistingWordAndCheckCount() throws IOException {
+        String word = "avaj";
+        FileAnalyzer fileAnalyzer = new FileAnalyzer();
+        assertEquals(0, fileAnalyzer.analyze(word, path).getCount());
     }
 }

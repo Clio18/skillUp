@@ -1,10 +1,6 @@
 package com.obolonyk.skillup.fileanalyzer;
 
-import java.io.BufferedReader;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,22 +16,8 @@ public class FileAnalyzer {
     private static final String REG_EX_NOT_A_LETTER = "[^\\w]";
     private static final String REG_EX_SENTENCE_ENDINGS = "[!?.]";
 
-    private String word;
-    private String text;
-
-    public FileAnalyzer() {
-    }
-
-    public FileAnalyzer(String path, String word) throws IOException {
-        this.word = word;
-        try (FileInputStream fileInputStream = new FileInputStream(path);
-             InputStreamReader stream = new InputStreamReader(fileInputStream, StandardCharsets.UTF_8);
-                     BufferedReader reader=new BufferedReader(stream)){
-            this.text = getAllText(reader);
-        }
-    }
-
-    public FileInfo analyze() {
+    public FileInfo analyze(String word, String path) throws IOException {
+        String text = getAllText(path);
         List<String> sentencesWithWord = this.getSentencesWithWord(text, word);
         int totalCounter = 0;
         for (String sentence : sentencesWithWord) {
@@ -67,15 +49,6 @@ public class FileAnalyzer {
         return spaceOrEnd == EMPTY_CHAR;
     }
 
-    String getAllText(BufferedReader reader) throws IOException {
-        StringBuilder stringBuilder = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            stringBuilder.append(line);
-        }
-        return stringBuilder.toString();
-    }
-
     String[] getAllSentences(String text) {
         String replaceTripleDot = text.toLowerCase().replace(TRIPLE_DOT, DOT);
         String replaceTripleQuoter = replaceTripleDot.replace(QUOTER, EMPTY);
@@ -83,7 +56,7 @@ public class FileAnalyzer {
         return replaceAll.split(REG_EX_DOT);
     }
 
-    int getSentencesAndReturnItsAmount() {
+    int getSentencesAndReturnItsAmount(String text, String word) {
         List<String> sentencesWithWord = this.getSentencesWithWord(text, word);
         return sentencesWithWord.size();
     }
@@ -101,5 +74,21 @@ public class FileAnalyzer {
             }
         }
         return counter;
+    }
+
+    String getAllText(InputStream inputStream) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
+        StringBuilder stringBuilder = new StringBuilder();
+        String line;
+        while ((line = reader.readLine()) != null) {
+            stringBuilder.append(line);
+        }
+        return stringBuilder.toString();
+    }
+
+    private String getAllText(String path) throws IOException {
+        try (InputStream inputStream = new FileInputStream(path)) {
+            return getAllText(inputStream);
+        }
     }
 }

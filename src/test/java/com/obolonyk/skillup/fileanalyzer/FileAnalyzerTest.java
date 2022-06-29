@@ -58,9 +58,7 @@ class FileAnalyzerTest {
         String sentence4 = "Thus the term \"bean\" in general usage can refer to a host of different species.";
         String threeSentences = sentence1 + sentence2 + sentence3 + sentence4;
         InputStream stream = new ByteArrayInputStream(threeSentences.getBytes(StandardCharsets.UTF_8));
-        InputStreamReader inputStreamReader = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(inputStreamReader);
-        String text = fileAnalyzer.getAllText(reader);
+        String text = fileAnalyzer.getAllText(stream);
         assertEquals(threeSentences, text);
     }
 
@@ -70,9 +68,7 @@ class FileAnalyzerTest {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term \"bean\" in general usage can refer to a host of different species";
         InputStream stream = new ByteArrayInputStream(sentence.getBytes(StandardCharsets.UTF_8));
-        InputStreamReader inputStreamReader = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(inputStreamReader);
-        String text = fileAnalyzer.getAllText(reader);
+        String text = fileAnalyzer.getAllText(stream);
         assertEquals(sentence, text);
     }
 
@@ -159,6 +155,17 @@ class FileAnalyzerTest {
         String sentence = "Thus the term bean in general usage can refer to a host of different species";
         String word = "Thus";
         assertTrue(fileAnalyzer.validation(sentence, word));
+    }
+
+    @Test
+    @DisplayName("Test PrintSentencesAndReturnItsAmount")
+    void testPrintSentencesAndReturnItsAmount(){
+        String sentenceWith = "Thus the term bean in general usage can refer to a host of different species.";
+        String sentenceWithOut = "Thus the term ... in general usage can refer to a host of different species.";
+        String text = sentenceWith + sentenceWithOut;
+        String word = "bean";
+        FileAnalyzer fileAnalyzerForBean = new FileAnalyzer();
+        assertEquals(1, fileAnalyzerForBean.getSentencesAndReturnItsAmount(text, word));
     }
 
 
