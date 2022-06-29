@@ -158,14 +158,23 @@ class FileAnalyzerTest {
     }
 
     @Test
-    @DisplayName("Test PrintSentencesAndReturnItsAmount")
-    void testPrintSentencesAndReturnItsAmount(){
+    @DisplayName("Test GetSentencesAndReturnItsAmount")
+    void testGetSentencesAndReturnItsAmount(){
         String sentenceWith = "Thus the term bean in general usage can refer to a host of different species.";
         String sentenceWithOut = "Thus the term ... in general usage can refer to a host of different species.";
         String text = sentenceWith + sentenceWithOut;
         String word = "bean";
         FileAnalyzer fileAnalyzerForBean = new FileAnalyzer();
         assertEquals(1, fileAnalyzerForBean.getSentencesAndReturnItsAmount(text, word));
+    }
+
+    @Test
+    @DisplayName("test GetAllText")
+    void testGetAllText () throws IOException {
+        FileAnalyzer fileAnalyzer = new FileAnalyzer();
+        String sentence = "Thus the term ... in general usage can refer to a host of different species.";
+        String text = fileAnalyzer.getAllText(new ByteArrayInputStream(sentence.getBytes()));
+        assertEquals(sentence, text);
     }
 
 
