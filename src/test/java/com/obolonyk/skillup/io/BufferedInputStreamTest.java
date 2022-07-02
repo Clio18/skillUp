@@ -44,4 +44,25 @@ class BufferedInputStreamTest {
         assertEquals(0, res[countReadByte]);
     }
 
+    @Test
+    @DisplayName("Test Read Empty String And Check Content")
+    void testReadEmptyStringAndCheckContent() throws IOException {
+        String content = "";
+        InputStream inputStream = new ByteArrayInputStream(content.getBytes());
+        BufferedInputStream byteArrayInputStream = new BufferedInputStream(inputStream);
+        assertEquals(-1, byteArrayInputStream.read());
+    }
+
+    @Test
+    @DisplayName("Test Read Array Of bytes And Check Content")
+    void testReadArrayOfBytesAndCheckContent() throws IOException {
+        String content = "HelloHelloHelloHello";
+        InputStream inputStream = new ByteArrayInputStream(content.getBytes());
+        BufferedInputStream byteArrayInputStream = new BufferedInputStream(inputStream);
+        byte[] bytes = new byte[content.length()];
+        int i = byteArrayInputStream.read(bytes);
+        assertEquals(content.length(), i);
+        assertEquals("HelloHelloHelloHello", new String(bytes));
+    }
+
 }

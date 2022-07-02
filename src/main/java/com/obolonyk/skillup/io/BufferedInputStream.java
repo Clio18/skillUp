@@ -30,24 +30,20 @@ public class BufferedInputStream extends InputStream {
     @Override
     public int read(byte[] array, int off, int len) throws IOException {
         int counter = 0;
-        if (buffer.length - position > len) {
-
-            for (int i = 0; i < len; i++) {
-                if (position == buffer.length) {
-                    position = 0;
-                    check = fillBuffer();
-                }
-                if (check == position) {
-                    return -1;
-                }
-                if (buffer[position] == 0) {
-                    return counter;
-                }
-                array[i] = buffer[position];
-                position++;
-                counter++;
+        for (int i = 0; i < len; i++) {
+            if (position == buffer.length) {
+                position = 0;
+                check = fillBuffer();
             }
-
+            if (check == position) {
+                return -1;
+            }
+            if (buffer[position] == 0) {
+                return counter;
+            }
+            array[i] = buffer[position];
+            position++;
+            counter++;
         }
         return counter;
     }
@@ -66,7 +62,7 @@ public class BufferedInputStream extends InputStream {
             check = fillBuffer();
         }
 
-        if (position != buffer.length && check != position) {
+        if (position != buffer.length && check != position && check != -1) {
             byte current = buffer[position];
             position++;
             return current;
