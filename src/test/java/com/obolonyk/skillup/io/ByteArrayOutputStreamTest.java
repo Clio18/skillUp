@@ -8,7 +8,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ByteArrayOutputStreamTest {
 
     @Test
-    @DisplayName("test Write Array Of Bytes And Check Result Part")
+    @DisplayName("Test Write Array Of Bytes And Check Result Part")
     void testWriteArrayOfBytesAndCheckResultPart() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte[] array = {1, 2, 3, 4, 5};
@@ -19,7 +19,7 @@ class ByteArrayOutputStreamTest {
     }
 
     @Test
-    @DisplayName("test Write Byte And Check Result(")
+    @DisplayName("Test Write Byte And Check Result(")
     void testWriteByteAndCheckResult() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte expected = 32;
@@ -29,7 +29,7 @@ class ByteArrayOutputStreamTest {
     }
 
     @Test
-    @DisplayName("test Write Array Of Bytes And Check Result(")
+    @DisplayName("Test Write Array Of Bytes And Check Result(")
     void testWriteArrayOfBytesAndCheckResult() {
         ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
         byte[] expected = {1, 2, 3, 4, 5};

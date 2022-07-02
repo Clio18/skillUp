@@ -3,12 +3,14 @@ package com.obolonyk.skillup.io;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.io.IOException;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 class ByteArrayInputStreamTest {
 
     @Test
-    @DisplayName("test Read And Check Content")
+    @DisplayName("Test Read And Check Content")
     void testReadAndCheckContent() {
         String content = "Hello";
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
@@ -21,7 +23,7 @@ class ByteArrayInputStreamTest {
     }
 
     @Test
-    @DisplayName("test Read Empty String And Check Content")
+    @DisplayName("Test Read Empty String And Check Content")
     void testReadEmptyStringAndCheckContent() {
         String content = "";
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
@@ -29,8 +31,8 @@ class ByteArrayInputStreamTest {
     }
 
     @Test
-    @DisplayName("test Read Array Of bytes And Check Content")
-    void testReadArrayOfBytesAndCheckContent() {
+    @DisplayName("Test Read Array Of bytes And Check Content")
+    void testReadArrayOfBytesAndCheckContent() throws IOException {
         String content = "Hello";
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
         byte[] bytes = new byte[content.length()];
@@ -40,8 +42,8 @@ class ByteArrayInputStreamTest {
     }
 
     @Test
-    @DisplayName("test Read Array Of bytes And Check Content Part")
-    void testReadArrayOfBytesAndCheckContentPart() {
+    @DisplayName("Test Read Array Of bytes And Check Content Part")
+    void testReadArrayOfBytesAndCheckContentPart() throws IOException {
         String content = "Hello";
         ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
         byte[] bytes = new byte[content.length()];
