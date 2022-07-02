@@ -20,7 +20,7 @@ public class ByteArrayInputStream extends InputStream {
         if (count == buffer.length) {
             return -1;
         }
-        return buffer[count++];
+        return buffer[count++] & 0xFF;
     }
 
     @Override
@@ -39,11 +39,7 @@ public class ByteArrayInputStream extends InputStream {
 
         if (wasRead != 0) {
             int delta = buffer.length - wasRead;
-            if (delta >= array.length) {
-                len = array.length;
-            } else {
-                len = delta;
-            }
+            len = Math.min(delta, array.length);
         }
 
         System.arraycopy(buffer, index, array, off, len);

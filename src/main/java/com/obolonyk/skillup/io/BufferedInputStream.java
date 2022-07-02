@@ -65,7 +65,7 @@ public class BufferedInputStream extends InputStream {
         if (position != buffer.length && check != position && check != -1) {
             byte current = buffer[position];
             position++;
-            return current;
+            return current & 0xFF;
         } else {
             return -1;
         }
