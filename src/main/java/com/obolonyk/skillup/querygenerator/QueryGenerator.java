@@ -9,7 +9,7 @@ public interface QueryGenerator {
 
     String insert(Object value) throws IllegalAccessException;
 
-    String update(Object value) throws IllegalAccessException, InvocationTargetException;
+    String update(Object value) throws IllegalAccessException;
 
     String findById(Class<?> type, Serializable id);
 

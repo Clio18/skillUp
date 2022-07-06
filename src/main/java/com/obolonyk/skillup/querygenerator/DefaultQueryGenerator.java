@@ -8,197 +8,167 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.StringJoiner;
 
-import static com.obolonyk.skillup.querygenerator.util.Util.*;
-
-public class QueryGeneratorCustomImpl implements QueryGenerator {
+public class DefaultQueryGenerator implements QueryGenerator {
+    private static final String SELECT = "SELECT ";
+    private static final String DELETE = "DELETE ";
+    private static final String INSERT = "INSERT ";
+    private static final String VALUES = "VALUES ";
+    private static final String SET = "SET ";
+    private static final String UPDATE = "UPDATE ";
+    private static final String INTO = "INTO ";
+    private static final String FROM = "FROM ";
+    private static final String WHERE = "WHERE ";
+    private static final String ID = "id";
+    private static final String END_QUERY = ";";
+    private static final String QUOTER = "'";
+    private static final String DELIMITER = ", ";
+    private static final String SPACE = " ";
+    private static final String EQUAL = " = ";
+    private static final String OPEN_BRACKET = "(";
+    private static final String CLOSE_BRACKET = ")";
 
     @Override
     public String findAll(Class<?> clazz) {
-        // SELECT id, user_name, age FROM users;
-
         StringBuilder stringBuilder = new StringBuilder();
         StringJoiner stringJoiner = new StringJoiner(DELIMITER);
         stringBuilder.append(SELECT);
-        stringBuilder.append(SPACE);
-
         String tableName = getTableName(clazz);
-
         for (Field declaredField : clazz.getDeclaredFields()) {
-            extractFieldNames(stringJoiner, declaredField);
+            fillJoinerByExtractedFieldNames(stringJoiner, declaredField);
         }
-
-        stringBuilder.append(stringJoiner);
-        stringBuilder.append(SPACE);
+        stringBuilder.append(stringJoiner).append(SPACE);
         stringBuilder.append(FROM);
-        stringBuilder.append(SPACE);
         stringBuilder.append(tableName);
         stringBuilder.append(END_QUERY);
-
         return stringBuilder.toString();
     }
 
 
     @Override
     public String findById(Class<?> clazz, Serializable id) {
-        //"SELECT id, user_name, age FROM users WHERE id = " + "'" + id + "'" + ";"
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(SELECT);
-        stringBuilder.append(SPACE);
-
         StringJoiner stringJoiner = new StringJoiner(DELIMITER);
+        StringBuilder idValueExpression = new StringBuilder();
         for (Field declaredField : clazz.getDeclaredFields()) {
-            extractFieldNames(stringJoiner, declaredField);
+            declaredField.setAccessible(true);
+            fillJoinerByExtractedFieldNames(stringJoiner, declaredField);
+            Column column = declaredField.getAnnotation(Column.class);
+            if (column != null && declaredField.getAnnotation(Id.class) != null) {
+                makeExpressionForFieldValueDependsOnItsType(declaredField, id.toString(), idValueExpression);
+            }
         }
-
-        stringBuilder.append(stringJoiner);
-        stringBuilder.append(SPACE);
+        stringBuilder.append(stringJoiner).append(SPACE);
         stringBuilder.append(FROM);
-        stringBuilder.append(SPACE);
-
         String tableName = getTableName(clazz);
-        stringBuilder.append(tableName);
-
-        stringBuilder.append(SPACE);
+        stringBuilder.append(tableName).append(SPACE);
         stringBuilder.append(WHERE);
-        stringBuilder.append(SPACE);
-        stringBuilder.append(ID);
-        stringBuilder.append(SPACE);
-        stringBuilder.append(EQUAL);
-        stringBuilder.append(SPACE);
-        stringBuilder.append(QUOTER);
-        stringBuilder.append(id);
-        stringBuilder.append(QUOTER);
+        stringBuilder.append(ID).append(EQUAL);
+        stringBuilder.append(idValueExpression);
         stringBuilder.append(END_QUERY);
-
         return stringBuilder.toString();
     }
 
     @Override
     public String delete(Class<?> clazz, Serializable id) {
-        //"DELETE FROM users WHERE id = " + "'" + id + "'" + ";"
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(DELETE);
-        stringBuilder.append(SPACE);
         stringBuilder.append(FROM);
-        stringBuilder.append(SPACE);
-
         String tableName = getTableName(clazz);
-        stringBuilder.append(tableName);
-
-        stringBuilder.append(SPACE);
+        stringBuilder.append(tableName).append(SPACE);
         stringBuilder.append(WHERE);
-        stringBuilder.append(SPACE);
-        stringBuilder.append(ID);
-        stringBuilder.append(SPACE);
-        stringBuilder.append(EQUAL);
-        stringBuilder.append(SPACE);
-        stringBuilder.append(QUOTER);
-        stringBuilder.append(id);
-        stringBuilder.append(QUOTER);
-        stringBuilder.append(END_QUERY);
+        stringBuilder.append(ID).append(EQUAL);
 
+        StringBuilder idValueExpression = new StringBuilder();
+        for (Field declaredField : clazz.getDeclaredFields()) {
+            declaredField.setAccessible(true);
+            Column column = declaredField.getAnnotation(Column.class);
+            if (column != null && declaredField.getAnnotation(Id.class) != null) {
+                makeExpressionForFieldValueDependsOnItsType(declaredField, id.toString(), idValueExpression);
+            }
+        }
+        stringBuilder.append(idValueExpression);
+        stringBuilder.append(END_QUERY);
         return stringBuilder.toString();
     }
 
     @Override
     public String insert(Object value) throws IllegalAccessException {
-        //"INSERT INTO users (id, user_name, age) VALUES (" + "'" + user.getId()
-        //                + "', " + "'" + user.getName()
-        //                + "', " + "'" + user.getAge()
-        //                + "'" + ");";
 
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(INSERT);
-        stringBuilder.append(SPACE);
         stringBuilder.append(INTO);
-        stringBuilder.append(SPACE);
-
         Class<?> clazz = value.getClass();
         String tableName = getTableName(clazz);
-
-        stringBuilder.append(tableName);
-        stringBuilder.append(SPACE);
+        stringBuilder.append(tableName).append(SPACE);
         stringBuilder.append(OPEN_BRACKET);
-
         StringJoiner stringJoinerForName = new StringJoiner(DELIMITER);
         StringJoiner stringJoinerForValues = new StringJoiner(DELIMITER);
         for (Field declaredField : clazz.getDeclaredFields()) {
-            extractFieldNames(stringJoinerForName, declaredField);
-            extractFieldValues(stringJoinerForValues, declaredField, value);
+            fillJoinerByExtractedFieldNames(stringJoinerForName, declaredField);
+            fillJoinerByExtractedFieldValues(stringJoinerForValues, declaredField, value);
         }
-
         stringBuilder.append(stringJoinerForName);
-        stringBuilder.append(CLOSE_BRACKET);
-        stringBuilder.append(SPACE);
+        stringBuilder.append(CLOSE_BRACKET).append(SPACE);
         stringBuilder.append(VALUES);
-        stringBuilder.append(SPACE);
-
-
         stringBuilder.append(OPEN_BRACKET);
-
         stringBuilder.append(stringJoinerForValues);
-
         stringBuilder.append(CLOSE_BRACKET);
         stringBuilder.append(END_QUERY);
-
         return stringBuilder.toString();
     }
 
 
     @Override
     public String update(Object value) throws IllegalAccessException {
-        //"UPDATE users SET user_name = " + "'" + user.getName()
-        //                + "'" + ", age = " + "'" + user.getAge()
-        //                + "'" + " WHERE id = " + "'" + user.getId()
-        //                + "'" + ";";
-
         StringBuilder stringBuilder = new StringBuilder();
         stringBuilder.append(UPDATE);
-        stringBuilder.append(SPACE);
-
         Class<?> userClass = value.getClass();
         String tableName = getTableName(userClass);
-        stringBuilder.append(tableName);
-
-        stringBuilder.append(SPACE);
+        stringBuilder.append(tableName).append(SPACE);
         stringBuilder.append(SET);
-        stringBuilder.append(SPACE);
-
         StringJoiner stringJoiner = new StringJoiner(DELIMITER);
-
-        String idValue = null;
+        StringBuilder idValueExpression = new StringBuilder();
         for (Field declaredField : userClass.getDeclaredFields()) {
             declaredField.setAccessible(true);
+            String fieldValue = declaredField.get(value).toString();
             Column column = declaredField.getAnnotation(Column.class);
             if (column != null && declaredField.getAnnotation(Id.class) == null) {
                 String fieldName = column.name().isEmpty() ? declaredField.getName() : column.name();
-                String expression = fieldName + SPACE + EQUAL + SPACE + QUOTER + declaredField.get(value) + QUOTER;
+                StringBuilder expression = new StringBuilder();
+                expression.append(fieldName);
+                expression.append(EQUAL);
+                makeExpressionForFieldValueDependsOnItsType(declaredField, fieldValue, expression);
                 stringJoiner.add(expression);
             } else {
-                idValue = String.valueOf(declaredField.get(value));
+                makeExpressionForFieldValueDependsOnItsType(declaredField, fieldValue, idValueExpression);
             }
         }
-
-        stringBuilder.append(stringJoiner);
-        stringBuilder.append(SPACE);
+        stringBuilder.append(stringJoiner).append(SPACE);
         stringBuilder.append(WHERE);
-        stringBuilder.append(SPACE);
-        stringBuilder.append(ID);
-        stringBuilder.append(SPACE);
-        stringBuilder.append(EQUAL);
-        stringBuilder.append(SPACE);
-        stringBuilder.append(QUOTER);
-        stringBuilder.append(idValue);
-        stringBuilder.append(QUOTER);
+        stringBuilder.append(ID).append(EQUAL);
+        stringBuilder.append(idValueExpression);
         stringBuilder.append(END_QUERY);
-
         return stringBuilder.toString();
     }
 
+    private void makeExpressionForFieldValueDependsOnItsType(Field declaredField, String fieldValue, StringBuilder expression) {
+        if (declaredField.getType().equals(String.class)) {
+            wrapInQuoter(expression, fieldValue);
+        } else {
+            expression.append(fieldValue);
+        }
+    }
 
-    private void extractFieldNames(StringJoiner stringJoiner, Field declaredField) {
+    private void wrapInQuoter(StringBuilder expression, String value) {
+        expression.append(QUOTER);
+        expression.append(value);
+        expression.append(QUOTER);
+    }
+
+    private void fillJoinerByExtractedFieldNames(StringJoiner stringJoiner, Field declaredField) {
         declaredField.setAccessible(true);
         Column column = declaredField.getAnnotation(Column.class);
         if (column != null) {
@@ -207,11 +177,15 @@ public class QueryGeneratorCustomImpl implements QueryGenerator {
         }
     }
 
-    private void extractFieldValues(StringJoiner stringJoiner, Field declaredField, Object value) throws IllegalAccessException {
+    private void fillJoinerByExtractedFieldValues(StringJoiner stringJoiner, Field declaredField, Object value) throws IllegalAccessException {
         declaredField.setAccessible(true);
         Column column = declaredField.getAnnotation(Column.class);
         if (column != null) {
-            stringJoiner.add(QUOTER + declaredField.get(value) + QUOTER);
+            if (declaredField.getType().equals(String.class)) {
+                stringJoiner.add(QUOTER + declaredField.get(value) + QUOTER);
+            } else {
+                stringJoiner.add(declaredField.get(value).toString());
+            }
         }
     }
 
