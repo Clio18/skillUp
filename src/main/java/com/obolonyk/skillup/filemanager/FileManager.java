@@ -2,11 +2,7 @@ package com.obolonyk.skillup.filemanager;
 
 import java.io.*;
 
-public class FileManager {
-
-    private FileManager() {
-        throw new IllegalStateException("Utility class");
-    }
+public abstract class FileManager {
 
     // public static int countFiles(String path) - принимает путь к папке,
     // возвращает количество файлов в папке и всех подпапках по пути
@@ -43,7 +39,7 @@ public class FileManager {
     public static void copy(String from, String to) throws IOException {
         File[] files = getListOfFiles(from);
         for (File element : files) {
-            String newPath = to + File.separator + element.getName();
+            File newPath = new File(to, element.getName());
             if (element.isFile()) {
                 byte[] bytes;
                 try (InputStream inputStream = new FileInputStream(element.getAbsoluteFile());
@@ -52,11 +48,10 @@ public class FileManager {
                     outputStream.write(bytes);
                 }
             } else {
-                File file = new File(newPath);
-                if (!file.mkdir()) {
-                    throw new NullPointerException("The folder was not created on path: " + newPath);
+                if (!newPath.mkdir()) {
+                    throw new NullPointerException("The folder was not created on path: " + newPath.getPath());
                 }
-                copy(from + File.separator + element.getName(), newPath);
+                copy(new File (from, element.getName()).getPath(), newPath.getPath());
             }
         }
     }
