@@ -127,7 +127,7 @@ class FileAnalyzerTest {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term bean in general usage can refer to a host of different species";
         String word = "bean";
-        assertTrue(fileAnalyzer.validation(sentence, word));
+        assertTrue(fileAnalyzer.validateThatWordEndsWithEmptySpace(sentence, word));
     }
 
     @Test
@@ -136,7 +136,7 @@ class FileAnalyzerTest {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term bean in general usage can refer to a host of different species";
         String word = "gen";
-        assertFalse(fileAnalyzer.validation(sentence, word));
+        assertFalse(fileAnalyzer.validateThatWordEndsWithEmptySpace(sentence, word));
     }
 
     @Test
@@ -145,7 +145,7 @@ class FileAnalyzerTest {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term bean in general usage can refer to a host of different species";
         String word = "species";
-        assertTrue(fileAnalyzer.validation(sentence, word));
+        assertTrue(fileAnalyzer.validateThatWordEndsWithEmptySpace(sentence, word));
     }
 
     @Test
@@ -154,13 +154,13 @@ class FileAnalyzerTest {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term bean in general usage can refer to a host of different species";
         String word = "Thus";
-        assertTrue(fileAnalyzer.validation(sentence, word));
+        assertTrue(fileAnalyzer.validateThatWordEndsWithEmptySpace(sentence, word));
     }
 
     @Test
-    @DisplayName("Test GetSentencesAndReturnItsAmount")
+    @DisplayName("test GetSentencesAndReturnItsAmount")
     void testGetSentencesAndReturnItsAmount(){
-        String sentenceWith = "Thus the term bean in general usage can refer to a host of different species.";
+        String sentenceWith = "Thus the term bean; in general usage can refer to a host of different species.";
         String sentenceWithOut = "Thus the term ... in general usage can refer to a host of different species.";
         String text = sentenceWith + sentenceWithOut;
         String word = "bean";

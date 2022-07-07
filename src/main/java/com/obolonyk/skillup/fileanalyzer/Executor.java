@@ -4,7 +4,7 @@ import java.io.IOException;
 public class Executor {
     public static void main(String[] args) throws IOException {
         String word = "Java";
-        String path = "text.txt";
+        String path = "src/test/resources/text.txt";
 
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         FileInfo fileInfo = fileAnalyzer.analyze(word, path);
