@@ -13,7 +13,7 @@ public abstract class FileManager {
             if (!listFile.isDirectory()) {
                 counter++;
             } else {
-                counter = counter + countFiles(listFile.getPath());
+                counter += countFiles(listFile.getPath());
             }
         }
         return counter;
