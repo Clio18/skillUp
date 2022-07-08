@@ -21,12 +21,12 @@ class BufferedOutputStreamTest {
         bufferedOutputStream.write('o');
         bufferedOutputStream.flush();
         FileInputStream fileInputStream = new FileInputStream("text3.txt");
-        assertEquals('H',fileInputStream.read());
-        assertEquals('e',fileInputStream.read());
-        assertEquals('l',fileInputStream.read());
-        assertEquals('l',fileInputStream.read());
-        assertEquals('o',fileInputStream.read());
-        assertEquals(-1,fileInputStream.read());
+        assertEquals('H', fileInputStream.read());
+        assertEquals('e', fileInputStream.read());
+        assertEquals('l', fileInputStream.read());
+        assertEquals('l', fileInputStream.read());
+        assertEquals('o', fileInputStream.read());
+        assertEquals(-1, fileInputStream.read());
         File file = new File("text3.txt");
         file.delete();
     }
@@ -39,12 +39,12 @@ class BufferedOutputStreamTest {
         bufferedOutputStream.write("Hello".getBytes());
         bufferedOutputStream.flush();
         FileInputStream fileInputStream = new FileInputStream("text3.txt");
-        assertEquals('H',fileInputStream.read());
-        assertEquals('e',fileInputStream.read());
-        assertEquals('l',fileInputStream.read());
-        assertEquals('l',fileInputStream.read());
-        assertEquals('o',fileInputStream.read());
-        assertEquals(-1,fileInputStream.read());
+        assertEquals('H', fileInputStream.read());
+        assertEquals('e', fileInputStream.read());
+        assertEquals('l', fileInputStream.read());
+        assertEquals('l', fileInputStream.read());
+        assertEquals('o', fileInputStream.read());
+        assertEquals(-1, fileInputStream.read());
         File file = new File("text3.txt");
         file.delete();
     }

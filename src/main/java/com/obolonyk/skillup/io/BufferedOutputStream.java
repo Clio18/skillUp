@@ -16,7 +16,6 @@ public class BufferedOutputStream extends OutputStream {
         buffer = new byte[CAPACITY];
     }
 
-
     @Override
     public void write(int b) throws IOException {
         if (position == CAPACITY) {

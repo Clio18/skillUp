@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 
+import static com.obolonyk.skillup.io.BufferedInputStream.readBytesToBuffer;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BufferedInputStreamTest {
@@ -34,9 +35,9 @@ class BufferedInputStreamTest {
         byte[] contentBytes = content.getBytes();
         byte[] res = new byte[10];
         InputStream inputStream = new ByteArrayInputStream(contentBytes);
-        BufferedInputStream byteArrayInputStream = new BufferedInputStream(inputStream);
-        assertEquals(0, byteArrayInputStream.read(res, 0, 0));
-        int countReadByte = byteArrayInputStream.read(res, 0, 4);
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+        assertEquals(0, bufferedInputStream.read(res, 0, 0));
+        int countReadByte = bufferedInputStream.read(res, 0, 4);
         assertEquals(4, countReadByte);
         for (int i = 0; i < countReadByte; i++) {
             assertEquals(content.charAt(i), res[i]);
@@ -49,8 +50,8 @@ class BufferedInputStreamTest {
     void testReadEmptyStringAndCheckContent() throws IOException {
         String content = "";
         InputStream inputStream = new ByteArrayInputStream(content.getBytes());
-        BufferedInputStream byteArrayInputStream = new BufferedInputStream(inputStream);
-        assertEquals(-1, byteArrayInputStream.read());
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+        assertEquals(-1, bufferedInputStream.read());
     }
 
     @Test
@@ -58,11 +59,43 @@ class BufferedInputStreamTest {
     void testReadArrayOfBytesAndCheckContent() throws IOException {
         String content = "HelloHelloHelloHello";
         InputStream inputStream = new ByteArrayInputStream(content.getBytes());
-        BufferedInputStream byteArrayInputStream = new BufferedInputStream(inputStream);
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
         byte[] bytes = new byte[content.length()];
-        int i = byteArrayInputStream.read(bytes);
+        int i = bufferedInputStream.read(bytes);
         assertEquals(content.length(), i);
         assertEquals("HelloHelloHelloHello", new String(bytes));
+    }
+
+    @Test
+    @DisplayName("Test FillBuffer When Content Less Than Buffer And Check Result Of Read Bytes")
+    void testFillBufferWhenContentLessThanBufferAndCheckResultOfReadBytes() throws IOException {
+        String content = "Hell";
+        InputStream inputStream = new ByteArrayInputStream(content.getBytes());
+        byte [] buffer = new byte[5];
+        int i = readBytesToBuffer(inputStream, buffer);
+        assertEquals(content.length(), i);
+    }
+
+    @Test
+    @DisplayName("Test FillBuffer When Content More Than Buffer And Check Result Of Read Bytes")
+    void testFillBufferWhenContentMoreThanBufferAndCheckResultOfReadBytes() throws IOException {
+        String content = "Hellooooo";
+        InputStream inputStream = new ByteArrayInputStream(content.getBytes());
+        byte [] buffer = new byte[5];
+        int i = readBytesToBuffer(inputStream, buffer);
+        assertEquals(buffer.length, i);
+    }
+
+    @Test
+    @DisplayName("Test Read By Array Of Bytes And Check Result")
+    void testReadByArrayOfBytes() throws IOException {
+        String content = "";
+        byte[] contentBytes = content.getBytes();
+        byte[] res = new byte[5];
+        InputStream inputStream = new ByteArrayInputStream(contentBytes);
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
+        int countReadByte = bufferedInputStream.read(res, 0, res.length);
+        assertEquals(-1, countReadByte);
     }
 
 }

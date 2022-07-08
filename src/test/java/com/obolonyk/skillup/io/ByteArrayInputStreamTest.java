@@ -58,4 +58,60 @@ class ByteArrayInputStreamTest {
         assertEquals(0, bytes[4]);
     }
 
+    @Test
+    @DisplayName("Test ValidateParameters When Array Is Null And Check Exception Message")
+    void testValidateParametersWhenArrayIsNullAndCheckExceptionMessage(){
+        NullPointerException exception = assertThrows(NullPointerException.class, () -> {
+            ByteArrayInputStream.validateParameters(null, 0, 0);
+        });
+        assertEquals("Array of bytes is null", exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test ValidateParameters When Off Parameter Less Than Zero And Check Exception Message")
+    void testValidateParametersWhenOffParameterLessThanZeroAndCheckExceptionMessage(){
+        byte [] array = new byte[5];
+        int off = -1;
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class, () -> {
+            ByteArrayInputStream.validateParameters(array, off, 0);
+        });
+        assertEquals("Position or length can`t be less than zero. Length can`t be more than " + (array.length - off), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test ValidateParameters When Length Parameter Less Than Zero And Check Exception Message")
+    void testValidateParametersWhenLengthParameterLessThanZeroAndCheckExceptionMessage(){
+        byte [] array = new byte[5];
+        int off = 2;
+        int length = -1;
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class, () -> {
+            ByteArrayInputStream.validateParameters(array, off, length);
+        });
+        assertEquals("Position or length can`t be less than zero. Length can`t be more than " + (array.length - off), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test ValidateParameters When Length Parameter More Than Array Length And Check Exception Message")
+    void testValidateParametersWhenLengthParameterMoreThanArrayLengthAndCheckExceptionMessage(){
+        byte [] array = new byte[5];
+        int off = 2;
+        int length = 10;
+        IndexOutOfBoundsException exception = assertThrows(IndexOutOfBoundsException.class, () -> {
+            ByteArrayInputStream.validateParameters(array, off, length);
+        });
+        assertEquals("Position or length can`t be less than zero. Length can`t be more than " + (array.length - off), exception.getMessage());
+    }
+
+    @Test
+    @DisplayName("Test InsureStreamIsNotClosed On Closed Stream And Check Exception Message")
+    void testInsureStreamIsNotClosedOnClosedStreamAndCheckExceptionMessage() throws IOException {
+        String content = "Hello";
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(content.getBytes());
+        byteArrayInputStream.close();
+        IOException exception = assertThrows(IOException.class, () -> {
+            byteArrayInputStream.insureStreamIsNotClosed();
+        });
+        assertEquals("The input stream is not closed", exception.getMessage());
+    }
+
 }

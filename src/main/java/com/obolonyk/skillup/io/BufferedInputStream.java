@@ -15,7 +15,7 @@ public class BufferedInputStream extends InputStream {
     public BufferedInputStream(InputStream target, int capacity) throws IOException {
         this.target = target;
         this.buffer = new byte[capacity];
-        check = fillBuffer();
+        check = readBytesToBuffer(target, buffer);
     }
 
     public BufferedInputStream(InputStream target) throws IOException {
@@ -29,15 +29,12 @@ public class BufferedInputStream extends InputStream {
 
     @Override
     public int read(byte[] array, int off, int len) throws IOException {
+        if (check == -1) {
+            return -1;
+        }
         int counter = 0;
         for (int i = 0; i < len; i++) {
-            if (position == buffer.length) {
-                position = 0;
-                check = fillBuffer();
-            }
-            if (check == position) {
-                return -1;
-            }
+            fillBuffer();
             if (buffer[position] == 0) {
                 return counter;
             }
@@ -56,12 +53,7 @@ public class BufferedInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-
-        if (position == buffer.length) {
-            position = 0;
-            check = fillBuffer();
-        }
-
+        fillBuffer();
         if (position != buffer.length && check != position && check != -1) {
             byte current = buffer[position];
             position++;
@@ -71,14 +63,20 @@ public class BufferedInputStream extends InputStream {
         }
     }
 
-    private int fillBuffer() throws IOException {
+    static int readBytesToBuffer(InputStream target, byte[] buffer) throws IOException {
         int readBytes = target.read(buffer);
-        if ((buffer.length > readBytes) && (readBytes > 0)) {
-            System.arraycopy(buffer, 0, buffer, 0, readBytes);
-            for (int i = readBytes; i < CAPACITY; i++) {
+        if (readBytes != -1) {
+            for (int i = readBytes; i < buffer.length; i++) {
                 buffer[i] = 0;
             }
         }
         return readBytes;
+    }
+
+    private void fillBuffer() throws IOException {
+        if (position == buffer.length) {
+            position = 0;
+            check = readBytesToBuffer(target, buffer);
+        }
     }
 }
