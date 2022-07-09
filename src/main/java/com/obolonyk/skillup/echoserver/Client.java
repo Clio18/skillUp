@@ -9,23 +9,22 @@ import java.util.Scanner;
 public class Client {
     public static void main(String[] args) throws IOException {
 
-        try (Socket socket = new Socket("localhost", 3005);) {
-            try (BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
-                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());) {
+        try (Socket socket = new Socket("localhost", 3005);
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream())) {
 
-                Scanner scanner = new Scanner(System.in);
-                while (true) {
-                    String line = scanner.nextLine();
-                    if (line.equals("-1")) {
-                        break;
-                    }
-                    bufferedOutputStream.write(line.getBytes());
-                    bufferedOutputStream.flush();
-
-                    byte[] buffer = new byte[50];
-                    int read = bufferedInputStream.read(buffer);
-                    System.out.println(new String(buffer, 0, read));
+            Scanner scanner = new Scanner(System.in);
+            while (true) {
+                String line = scanner.nextLine();
+                if (line.equals("-1")) {
+                    break;
                 }
+                bufferedOutputStream.write(line.getBytes());
+                bufferedOutputStream.flush();
+
+                byte[] buffer = new byte[50];
+                int read = bufferedInputStream.read(buffer);
+                System.out.println(new String(buffer, 0, read));
             }
         }
     }
