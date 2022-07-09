@@ -1,5 +1,7 @@
 package com.obolonyk.skillup.echoserver;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -7,17 +9,23 @@ import java.util.Scanner;
 public class Client {
     public static void main(String[] args) throws IOException {
 
-        while (true) {
-            try (Socket socket = new Socket("localhost", 3005)) {
+        try (Socket socket = new Socket("localhost", 3005);) {
+            try (BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
+                 BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());) {
+
                 Scanner scanner = new Scanner(System.in);
-                String line = scanner.nextLine();
-                if (line.equals("-1")) {
-                    break;
+                while (true) {
+                    String line = scanner.nextLine();
+                    if (line.equals("-1")) {
+                        break;
+                    }
+                    bufferedOutputStream.write(line.getBytes());
+                    bufferedOutputStream.flush();
+
+                    byte[] buffer = new byte[50];
+                    int read = bufferedInputStream.read(buffer);
+                    System.out.println(new String(buffer, 0, read));
                 }
-                socket.getOutputStream().write(line.getBytes());
-                byte[] buffer = new byte[50];
-                int read = socket.getInputStream().read(buffer);
-                System.out.println(new String(buffer, 0, read));
             }
         }
     }

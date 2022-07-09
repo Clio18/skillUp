@@ -1,19 +1,25 @@
 package com.obolonyk.skillup.echoserver;
 
+import java.io.BufferedInputStream;
+import java.io.BufferedOutputStream;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
     public static void main(String[] args) throws IOException {
-        try (ServerSocket serverSocket = new ServerSocket(3005)) {
+        ServerSocket serverSocket = new ServerSocket(3005);
+        try (Socket socket = serverSocket.accept();
+             BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());) {
             while (true) {
-                Socket socket = serverSocket.accept();
                 byte[] buffer = new byte[50];
-                int read = socket.getInputStream().read(buffer);
+                int read = bufferedInputStream.read(buffer);
+
                 String message = new String(buffer, 0, read);
                 String response = "Echo: " + message;
-                socket.getOutputStream().write(response.getBytes());
+                bufferedOutputStream.write(response.getBytes());
+                bufferedOutputStream.flush();
             }
         }
     }
