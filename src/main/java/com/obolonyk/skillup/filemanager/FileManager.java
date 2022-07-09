@@ -68,6 +68,9 @@ public abstract class FileManager {
             throw new IllegalArgumentException("Please provide a path");
         }
         File file = new File(path);
+        if (file.isHidden()){
+            throw new IllegalArgumentException("Provided path leads to hidden file! Access denied");
+        }
         File[] listFiles = file.listFiles();
         if (listFiles == null) {
             throw new NullPointerException("The files do not exist on provided path " + path);

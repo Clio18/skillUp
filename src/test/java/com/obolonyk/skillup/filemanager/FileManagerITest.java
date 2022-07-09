@@ -24,6 +24,7 @@ class FileManagerITest {
 
         File file1 = new File("new", "file1.txt");
         file1.createNewFile();
+
         File file2 = new File("new", "file2.txt");
         file2.createNewFile();
 
@@ -40,6 +41,9 @@ class FileManagerITest {
 
         File file5 = new File("new" + File.separator + "new1" + File.separator + "new2" + File.separator + "file5.txt");
         file5.createNewFile();
+
+        File hiddenDir = new File(".dir");
+        hiddenDir.mkdir();
     }
 
     @AfterEach
@@ -60,7 +64,7 @@ class FileManagerITest {
         file.delete();
         File file1 = new File("new", "file1.txt");
         file1.delete();
-        File file2 = new File("new","file2.txt");
+        File file2 = new File("new", "file2.txt");
         file2.delete();
         File fileDir = new File("new");
         fileDir.delete();
@@ -82,14 +86,17 @@ class FileManagerITest {
         File wenDir1 = new File("wen", "new1");
         wenDir1.delete();
 
-        File wen = new File("wen" , "file.txt");
+        File wen = new File("wen", "file.txt");
         wen.delete();
-        File wen1 = new File("wen","file1.txt");
+        File wen1 = new File("wen", "file1.txt");
         wen1.delete();
         File wen2 = new File("wen", "file2.txt");
         wen2.delete();
         File wenDir = new File("wen");
         wenDir.delete();
+
+        File hiddenDir = new File(".dir");
+        hiddenDir.delete();
     }
 
     @Test
@@ -200,5 +207,15 @@ class FileManagerITest {
         sameDir.delete();
         newDir.delete();
         newDirParent.delete();
+    }
+
+    @Test
+    @DisplayName("Test CountFiles On Hidden Path And Check Exception Message")
+    void testCountFilesOnHiddenPathAndCheckExceptionMessage() {
+        File hiddenDir = new File(".dir");
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
+            FileManager.countFiles(hiddenDir.getPath());
+        });
+        assertEquals("Provided path leads to hidden file! Access denied", exception.getMessage());
     }
 }
