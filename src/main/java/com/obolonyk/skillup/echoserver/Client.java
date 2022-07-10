@@ -2,6 +2,7 @@ package com.obolonyk.skillup.echoserver;
 
 import java.io.BufferedInputStream;
 import java.io.BufferedOutputStream;
+
 import java.io.IOException;
 import java.net.Socket;
 import java.util.Scanner;
@@ -17,9 +18,9 @@ public class Client {
 
         try (Socket socket = new Socket(HOST, PORT);
              BufferedInputStream bufferedInputStream = new BufferedInputStream(socket.getInputStream());
-             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream())) {
+             BufferedOutputStream bufferedOutputStream = new BufferedOutputStream(socket.getOutputStream());
+             Scanner scanner = new Scanner(System.in)) {
 
-            Scanner scanner = new Scanner(System.in);
             while (true) {
                 String line = scanner.nextLine();
                 if (line.equals(END_PROGRAM)) {
