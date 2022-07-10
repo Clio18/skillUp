@@ -8,13 +8,21 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.*;
+import java.util.logging.Logger;
 
 class FileManagerITest {
+    //Logger logger = Logger.getLogger("FileManagerTestLogger");
 
     @BeforeEach
     void init() throws IOException {
         File emptyDir = new File("empty");
         emptyDir.mkdir();
+
+//        if (emptyDir.mkdir()){
+//            logger.info(emptyDir.getName() + " folder was created!");
+//        } else {
+//            logger.warning(emptyDir.getName() + " was not created!");
+//        }
 
         File fileDir = new File("new");
         fileDir.mkdir();
@@ -194,7 +202,7 @@ class FileManagerITest {
 
     @Test
     @DisplayName("Test Copy In The Wrong Path And Check Exception Message")
-    void testCopyInTheWrongPathAndCheckExceptionMessage() throws IOException {
+    void testCopyInTheWrongPathAndCheckExceptionMessage() {
         File newDirParent = new File("www");
         newDirParent.mkdir();
         File newDir = new File("www", "www");
@@ -213,9 +221,7 @@ class FileManagerITest {
     @DisplayName("Test CountFiles On Hidden Path And Check Exception Message")
     void testCountFilesOnHiddenPathAndCheckExceptionMessage() {
         File hiddenDir = new File(".dir");
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            FileManager.countFiles(hiddenDir.getPath());
-        });
+        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> FileManager.countFiles(hiddenDir.getPath()));
         assertEquals("Provided path leads to hidden file! Access denied", exception.getMessage());
     }
 }
