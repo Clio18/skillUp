@@ -3,6 +3,7 @@ package com.obolonyk.skillup.fileanalyzer;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class FileAnalyzer {
     private static final String TRIPLE_DOT = "...";
@@ -13,12 +14,13 @@ public class FileAnalyzer {
     private static final char EMPTY_CHAR = ' ';
 
     private static final String REG_EX_DOT = "[.]";
-    private static final String REG_EX_NOT_A_LETTER = "[^\\w]";
+    private static final Pattern REG_EX_NOT_A_LETTER_PATTERN = Pattern.compile("[^\\w]");
     private static final String REG_EX_SENTENCE_ENDINGS = "[!?.]";
 
     public FileInfo analyze(String word, String path) throws IOException {
         String text = getAllText(path);
-        List<String> sentencesWithWord = getSentencesWithWord(text, word);
+        String[] sentences = getAllSentences(text);
+        List<String> sentencesWithWord = getSentencesWithWord(sentences, word);
         int totalCounter = 0;
         for (String sentence : sentencesWithWord) {
             totalCounter += getCounter(sentence, word);
@@ -26,8 +28,7 @@ public class FileAnalyzer {
         return new FileInfo(totalCounter, sentencesWithWord);
     }
 
-    List<String> getSentencesWithWord(String text, String word) {
-        String[] sentences = getAllSentences(text);
+    List<String> getSentencesWithWord(String[] sentences, String word) {
         List<String> sentenceWithWord = new ArrayList<>();
         for (String sentence : sentences) {
             if (sentence.contains(word.toLowerCase()) && validateThatWordEndsWithEmptySpace(sentence, word.toLowerCase())) {
@@ -51,15 +52,10 @@ public class FileAnalyzer {
 
     String[] getAllSentences(String text) {
         String replaceTripleDot = text.toLowerCase().replace(TRIPLE_DOT, DOT);
-        String replaceQuoter = replaceTripleDot.replace(QUOTER, EMPTY);
-        String replaceSemicolon = replaceQuoter.replace(SEMICOLON, EMPTY);
+        String replaceQuoter = replaceTripleDot.replaceAll(QUOTER, EMPTY);
+        String replaceSemicolon = replaceQuoter.replaceAll(SEMICOLON, EMPTY);
         String replaceAll = replaceSemicolon.replaceAll(REG_EX_SENTENCE_ENDINGS, DOT);
         return replaceAll.split(REG_EX_DOT);
-    }
-
-    int getSentencesAndReturnItsAmount(String text, String word) {
-        List<String> sentencesWithWord = this.getSentencesWithWord(text, word);
-        return sentencesWithWord.size();
     }
 
     static int getCounter(String sentence, String word) {
@@ -67,7 +63,7 @@ public class FileAnalyzer {
             throw new IllegalArgumentException("The word for search was not provided");
         }
 
-        String[] split = sentence.split(REG_EX_NOT_A_LETTER);
+        String[] split = REG_EX_NOT_A_LETTER_PATTERN.split(sentence);
         int counter = 0;
         for (String s : split) {
             if (s.toLowerCase().trim().equals(word.toLowerCase())) {
@@ -92,4 +88,22 @@ public class FileAnalyzer {
             return getAllText(inputStream);
         }
     }
+
+//    public static void main(String[] args) {
+//        String text = "a a... b b; b b! \"c c\". n n; n... \"d d\". c c?";
+//        String replaceTripleDot = text.toLowerCase().replace(TRIPLE_DOT, DOT);
+//        System.out.println(replaceTripleDot);
+//        String replaceQuoter = replaceTripleDot.replaceAll(QUOTER, EMPTY);
+//        System.out.println(replaceQuoter);
+//        String replaceSemicolon = replaceQuoter.replaceAll(SEMICOLON, EMPTY);
+//        System.out.println(replaceSemicolon);
+//        String replaceAll = replaceSemicolon.replaceAll(REG_EX_SENTENCE_ENDINGS, DOT);
+//        System.out.println(replaceAll);
+//
+//        String[] strings = replaceAll.split(REG_EX_DOT);
+//        System.out.println();
+//        for (String s : strings) {
+//            System.out.println(s.trim());
+//        }
+//    }
 }

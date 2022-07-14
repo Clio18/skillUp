@@ -92,7 +92,10 @@ class FileAnalyzerTest {
         String sentence1 = "Thus the term bean in general usage can refer to a host of different species!";
         String sentence2 = "Thus the term in general usage can refer to a host of different species?";
         String sentence3 = "Thus the term bean in general usage can refer to a host of different species.";
-        String threeSentences = sentence1 + sentence2 + sentence3;
+        String [] threeSentences = new String[3];
+        threeSentences[0] = sentence1;
+        threeSentences[1] = sentence2;
+        threeSentences[2] = sentence3;
         String word = "bean";
         List<String> sentencesWithWord = fileAnalyzer.getSentencesWithWord(threeSentences, word);
         assertEquals(2, sentencesWithWord.size());
@@ -105,7 +108,10 @@ class FileAnalyzerTest {
         String sentence1 = "Thus the term \"bean\" in general usage can refer to a host of different species!";
         String sentence2 = "Thus the term in general usage can refer to a host of different species?";
         String sentence3 = "Thus the term \"bean\" in general usage can refer to a host of different species.";
-        String threeSentences = sentence1 + sentence2 + sentence3;
+        String [] threeSentences = new String[3];
+        threeSentences[0] = sentence1;
+        threeSentences[1] = sentence2;
+        threeSentences[2] = sentence3;
         String word = "java";
         List<String> sentencesWithWord = fileAnalyzer.getSentencesWithWord(threeSentences, word);
         assertEquals(0, sentencesWithWord.size());
@@ -116,8 +122,10 @@ class FileAnalyzerTest {
     void testGetSentencesWithWordIfWordPartOfOtherWord() {
         FileAnalyzer fileAnalyzer = new FileAnalyzer();
         String sentence = "Thus the term \"bean\" in general usage can refer to a host of different species.";
+        String [] array = new String[1];
+        array[0] = sentence;
         String word = "gen";
-        List<String> sentencesWithWord = fileAnalyzer.getSentencesWithWord(sentence, word);
+        List<String> sentencesWithWord = fileAnalyzer.getSentencesWithWord(array, word);
         assertEquals(0, sentencesWithWord.size());
     }
 
@@ -155,17 +163,6 @@ class FileAnalyzerTest {
         String sentence = "Thus the term bean in general usage can refer to a host of different species";
         String word = "Thus";
         assertTrue(fileAnalyzer.validateThatWordEndsWithEmptySpace(sentence, word));
-    }
-
-    @Test
-    @DisplayName("test GetSentencesAndReturnItsAmount")
-    void testGetSentencesAndReturnItsAmount(){
-        String sentenceWith = "Thus the term bean; in general usage can refer to a host of different species.";
-        String sentenceWithOut = "Thus the term ... in general usage can refer to a host of different species.";
-        String text = sentenceWith + sentenceWithOut;
-        String word = "bean";
-        FileAnalyzer fileAnalyzerForBean = new FileAnalyzer();
-        assertEquals(1, fileAnalyzerForBean.getSentencesAndReturnItsAmount(text, word));
     }
 
     @Test

@@ -9,8 +9,8 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FileAnalyzerITest {
 
-    String path = "text.txt";
-    String pathWithCyrylica = "text2.txt";
+    String path = "src/test/resources/text.txt";
+    String pathWithCyrylica = "src/test/resources/text2.txt";
 
     @Test
     @DisplayName("Test GetTotalCount With UpperCase Word")
