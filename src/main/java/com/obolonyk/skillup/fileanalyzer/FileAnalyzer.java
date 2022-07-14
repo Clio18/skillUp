@@ -6,39 +6,32 @@ import java.util.List;
 import java.util.regex.Pattern;
 
 public class FileAnalyzer {
-    private static final String TRIPLE_DOT = "...";
-    private static final String DOT = ".";
-    private static final String QUOTER = "\"";
-    private static final String SEMICOLON = ";";
-    private static final String EMPTY = "";
-    private static final char EMPTY_CHAR = ' ';
 
-    private static final String REG_EX_DOT = "[.]";
     private static final Pattern REG_EX_NOT_A_LETTER_PATTERN = Pattern.compile("[^\\w]");
-    private static final String REG_EX_SENTENCE_ENDINGS = "[!?.]";
+    private static final Pattern REG_EX_SENTENCE_SPLIT_PATTERN = Pattern.compile("((?<!\\.)\\.{3}(?!\\.))|[.!?]");
 
     public FileInfo analyze(String word, String path) throws IOException {
-        String text = getAllText(path);
-        String[] sentences = getAllSentences(text);
-        List<String> sentencesWithWord = getSentencesWithWord(sentences, word);
+        String text = extractAllText(path);
+        String[] sentences = extractAllSentences(text);
+        List<String> sentencesWithWord = extractSentencesWithWord(sentences, word);
         int totalCounter = 0;
         for (String sentence : sentencesWithWord) {
-            totalCounter += getCounter(sentence, word);
+            totalCounter += countWordInSentence(sentence, word);
         }
         return new FileInfo(totalCounter, sentencesWithWord);
     }
 
-    List<String> getSentencesWithWord(String[] sentences, String word) {
+    List<String> extractSentencesWithWord(String[] sentences, String word) {
         List<String> sentenceWithWord = new ArrayList<>();
         for (String sentence : sentences) {
-            if (sentence.contains(word.toLowerCase()) && validateThatWordEndsWithEmptySpace(sentence, word.toLowerCase())) {
+            if (sentence.contains(word.toLowerCase()) && validateWordEnding(sentence, word.toLowerCase())) {
                 sentenceWithWord.add(sentence);
             }
         }
         return sentenceWithWord;
     }
 
-    boolean validateThatWordEndsWithEmptySpace(String sentence, String word) {
+    static boolean validateWordEnding(String sentence, String word) {
         int index = sentence.indexOf(word);
         int length = word.length();
         int target = index + length;
@@ -47,22 +40,21 @@ public class FileAnalyzer {
             return true;
         }
         char spaceOrEnd = chars[target];
-        return spaceOrEnd == EMPTY_CHAR;
+        return (spaceOrEnd == ' ' ||
+                spaceOrEnd == ';' ||
+                spaceOrEnd == ':' ||
+                spaceOrEnd == '\"' ||
+                spaceOrEnd == ',');
     }
 
-    String[] getAllSentences(String text) {
-        String replaceTripleDot = text.toLowerCase().replace(TRIPLE_DOT, DOT);
-        String replaceQuoter = replaceTripleDot.replaceAll(QUOTER, EMPTY);
-        String replaceSemicolon = replaceQuoter.replaceAll(SEMICOLON, EMPTY);
-        String replaceAll = replaceSemicolon.replaceAll(REG_EX_SENTENCE_ENDINGS, DOT);
-        return replaceAll.split(REG_EX_DOT);
+    String[] extractAllSentences(String text) {
+        return REG_EX_SENTENCE_SPLIT_PATTERN.split(text);
     }
 
-    static int getCounter(String sentence, String word) {
+    static int countWordInSentence(String sentence, String word) {
         if (word == null) {
-            throw new IllegalArgumentException("The word for search was not provided");
+            throw new NullPointerException("The word for search was null");
         }
-
         String[] split = REG_EX_NOT_A_LETTER_PATTERN.split(sentence);
         int counter = 0;
         for (String s : split) {
@@ -73,37 +65,19 @@ public class FileAnalyzer {
         return counter;
     }
 
-    String getAllText(InputStream inputStream) throws IOException {
+    String extractAllText(InputStream inputStream) throws IOException {
         BufferedReader reader = new BufferedReader(new InputStreamReader(inputStream));
         StringBuilder stringBuilder = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
             stringBuilder.append(line);
         }
-        return stringBuilder.toString();
+        return stringBuilder.toString().toLowerCase();
     }
 
-    private String getAllText(String path) throws IOException {
+    private String extractAllText(String path) throws IOException {
         try (InputStream inputStream = new FileInputStream(path)) {
-            return getAllText(inputStream);
+            return extractAllText(inputStream);
         }
     }
-
-//    public static void main(String[] args) {
-//        String text = "a a... b b; b b! \"c c\". n n; n... \"d d\". c c?";
-//        String replaceTripleDot = text.toLowerCase().replace(TRIPLE_DOT, DOT);
-//        System.out.println(replaceTripleDot);
-//        String replaceQuoter = replaceTripleDot.replaceAll(QUOTER, EMPTY);
-//        System.out.println(replaceQuoter);
-//        String replaceSemicolon = replaceQuoter.replaceAll(SEMICOLON, EMPTY);
-//        System.out.println(replaceSemicolon);
-//        String replaceAll = replaceSemicolon.replaceAll(REG_EX_SENTENCE_ENDINGS, DOT);
-//        System.out.println(replaceAll);
-//
-//        String[] strings = replaceAll.split(REG_EX_DOT);
-//        System.out.println();
-//        for (String s : strings) {
-//            System.out.println(s.trim());
-//        }
-//    }
 }
