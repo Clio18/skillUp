@@ -1,6 +1,8 @@
 package com.obolonyk.skillup.filemanager;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.Scanner;
 
 public abstract class FileManager {
 
@@ -27,7 +29,7 @@ public abstract class FileManager {
         for (File listFile : listFiles) {
             if (listFile.isDirectory()) {
                 counter++;
-                counter = counter + countDirs(listFile.getPath());
+                counter += countDirs(listFile.getPath());
             }
         }
         return counter;
@@ -41,17 +43,19 @@ public abstract class FileManager {
         for (File element : files) {
             File newPath = new File(to, element.getName());
             if (element.isFile()) {
-                byte[] bytes;
                 try (InputStream inputStream = new FileInputStream(element.getAbsoluteFile());
+                     Scanner scanner = new Scanner(inputStream, StandardCharsets.UTF_8);
                      OutputStream outputStream = new FileOutputStream(newPath)) {
-                    bytes = inputStream.readAllBytes();
-                    outputStream.write(bytes);
+                    while (scanner.hasNextLine()) {
+                        String line = scanner.nextLine();
+                        outputStream.write(line.getBytes());
+                    }
                 }
             } else {
                 if (!newPath.mkdir()) {
                     throw new NullPointerException("The folder was not created on path: " + newPath.getPath());
                 }
-                copy(new File (from, element.getName()).getPath(), newPath.getPath());
+                copy(new File(from, element.getName()).getPath(), newPath.getPath());
             }
         }
     }
@@ -68,13 +72,14 @@ public abstract class FileManager {
             throw new IllegalArgumentException("Please provide a path");
         }
         File file = new File(path);
-        if (file.isHidden()){
-            throw new IllegalArgumentException("Provided path leads to hidden file! Access denied");
-        }
         File[] listFiles = file.listFiles();
         if (listFiles == null) {
-            throw new NullPointerException("The files do not exist on provided path " + path);
+            return new File[0];
         }
         return listFiles;
+    }
+
+    public static void main(String[] args) {
+        System.out.println(countFiles("/users/m"));
     }
 }
