@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import java.io.IOException;
 import java.io.InputStream;
 
-import static com.obolonyk.skillup.io.BufferedInputStream.readBytesToBuffer;
 import static org.junit.jupiter.api.Assertions.*;
 
 class BufferedInputStreamTest {
@@ -67,26 +66,6 @@ class BufferedInputStreamTest {
     }
 
     @Test
-    @DisplayName("Test FillBuffer When Content Less Than Buffer And Check Result Of Read Bytes")
-    void testFillBufferWhenContentLessThanBufferAndCheckResultOfReadBytes() throws IOException {
-        String content = "Hell";
-        InputStream inputStream = new ByteArrayInputStream(content.getBytes());
-        byte [] buffer = new byte[5];
-        int i = readBytesToBuffer(inputStream, buffer);
-        assertEquals(content.length(), i);
-    }
-
-    @Test
-    @DisplayName("Test FillBuffer When Content More Than Buffer And Check Result Of Read Bytes")
-    void testFillBufferWhenContentMoreThanBufferAndCheckResultOfReadBytes() throws IOException {
-        String content = "Hellooooo";
-        InputStream inputStream = new ByteArrayInputStream(content.getBytes());
-        byte [] buffer = new byte[5];
-        int i = readBytesToBuffer(inputStream, buffer);
-        assertEquals(buffer.length, i);
-    }
-
-    @Test
     @DisplayName("Test Read By Array Of Bytes And Check Result")
     void testReadByArrayOfBytes() throws IOException {
         String content = "";
@@ -96,6 +75,20 @@ class BufferedInputStreamTest {
         BufferedInputStream bufferedInputStream = new BufferedInputStream(inputStream);
         int countReadByte = bufferedInputStream.read(res, 0, res.length);
         assertEquals(-1, countReadByte);
+    }
+
+    @Test
+    void test() throws IOException {
+        byte[] source = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+        BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(source), 5);
+        byte[] array = new byte[10];
+        bufferedInputStream.read(array, 0, 2);
+        bufferedInputStream.read(array, 2, 2);
+        bufferedInputStream.read(array, 4, 2);
+        bufferedInputStream.read(array, 6, 2);
+        for (byte b : array) {
+            System.out.println(b);
+        }
     }
 
 }

@@ -9,40 +9,81 @@ public class BufferedInputStream extends InputStream {
     private byte[] buffer;
     private static final int CAPACITY = 5;
     private int position;
-    private int check;
+    private int count;
 
 
-    public BufferedInputStream(InputStream target, int capacity) throws IOException {
+    public BufferedInputStream(InputStream target, int capacity) {
         this.target = target;
         this.buffer = new byte[capacity];
-        check = readBytesToBuffer(target, buffer);
     }
 
-    public BufferedInputStream(InputStream target) throws IOException {
+    public BufferedInputStream(InputStream target) {
         this(target, CAPACITY);
     }
 
-    @Override
-    public int read(byte[] array) throws IOException {
-        return read(array, 0, array.length);
+
+    public int readHelper(byte[] array, int off, int len) throws IOException {
+        if (count == -1) {
+            return -1;
+        }
+        if (len > array.length) {
+            throw new IndexOutOfBoundsException("Len is to big for provided array");
+        }
+        if (array.length - off < len) {
+            throw new IndexOutOfBoundsException("Len is to big for provided array");
+        }
+        if ((off | len) < 0) {
+            throw new IndexOutOfBoundsException("Len or off is less than zero");
+        }
+
+        int elementsInBuffer = count - position;
+
+        if (elementsInBuffer <= 0) {
+            if (len >= buffer.length) {
+                return target.read(array, off, len);
+            }
+            fillBuffer();
+        }
+
+        elementsInBuffer = count - position;
+
+        if (elementsInBuffer <= 0) {
+            return -1;
+        }
+
+        if (elementsInBuffer < len) {
+            System.arraycopy(buffer, position, array, off, elementsInBuffer);
+            position = position + elementsInBuffer;
+            return elementsInBuffer;
+        } else {
+            System.arraycopy(buffer, position, array, off, len);
+            position = position + len;
+            return len;
+        }
     }
 
     @Override
     public int read(byte[] array, int off, int len) throws IOException {
-        if (check == -1) {
-            return -1;
-        }
-        int counter = 0;
-        for (int i = 0; i < len; i++) {
-            fillBuffer();
-            if (buffer[position] == 0) {
-                return counter;
+        int n = 0;
+        while (true) {
+            int nread = readHelper(array, off + n, len - n);
+            if (nread == 0) {
+                return 0;
             }
-            array[i] = buffer[position];
-            position++;
-            counter++;
+            if (nread == -1) {
+                return -1;
+            }
+            n += nread;
+            return n;
         }
-        return counter;
+    }
+
+    private void fillBuffer() throws IOException {
+        position = 0;
+        int n = target.read(buffer, position, buffer.length - position);
+        if (n > 0) {
+            count = n + position;
+        }
     }
 
     @Override
@@ -53,8 +94,13 @@ public class BufferedInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        fillBuffer();
-        if (position != buffer.length && check != position && check != -1) {
+        if (position>= count){
+            fillBuffer();
+            if(position>=count){
+                return -1;
+            }
+        }
+        if (position != buffer.length && count != -1) {
             byte current = buffer[position];
             position++;
             return current & 0xFF;
@@ -63,20 +109,16 @@ public class BufferedInputStream extends InputStream {
         }
     }
 
-    static int readBytesToBuffer(InputStream target, byte[] buffer) throws IOException {
-        int readBytes = target.read(buffer);
-        if (readBytes != -1) {
-            for (int i = readBytes; i < buffer.length; i++) {
-                buffer[i] = 0;
-            }
-        }
-        return readBytes;
-    }
-
-    private void fillBuffer() throws IOException {
-        if (position == buffer.length) {
-            position = 0;
-            check = readBytesToBuffer(target, buffer);
+    public static void main(String[] args) throws IOException {
+        byte[] source = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+        java.io.BufferedInputStream bufferedInputStream = new java.io.BufferedInputStream(new ByteArrayInputStream(source), 5);
+        byte[] array = new byte[10];
+        bufferedInputStream.read(array, 0, 2);
+        bufferedInputStream.read(array, 2, 2);
+        bufferedInputStream.read(array, 4, 2);
+        bufferedInputStream.read(array, 6, 2);
+        for (byte b : array) {
+            System.out.println(b);
         }
     }
 }
