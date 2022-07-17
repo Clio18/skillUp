@@ -94,13 +94,11 @@ public class BufferedInputStream extends InputStream {
 
     @Override
     public int read() throws IOException {
-        if (position>= count){
+        int av = count - position;
+        if (av <= 0 && (count==0 | count==buffer.length))  {
             fillBuffer();
-            if(position>=count){
-                return -1;
-            }
         }
-        if (position != buffer.length && count != -1) {
+        if (position != buffer.length && count != -1 && count!=position) {
             byte current = buffer[position];
             position++;
             return current & 0xFF;

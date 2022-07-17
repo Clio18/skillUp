@@ -77,18 +77,18 @@ class BufferedInputStreamTest {
         assertEquals(-1, countReadByte);
     }
 
-    @Test
-    void test() throws IOException {
-        byte[] source = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
-        BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(source), 5);
-        byte[] array = new byte[10];
-        bufferedInputStream.read(array, 0, 2);
-        bufferedInputStream.read(array, 2, 2);
-        bufferedInputStream.read(array, 4, 2);
-        bufferedInputStream.read(array, 6, 2);
-        for (byte b : array) {
-            System.out.println(b);
-        }
-    }
+//    @Test
+//    void test() throws IOException {
+//        byte[] source = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20};
+//        BufferedInputStream bufferedInputStream = new BufferedInputStream(new ByteArrayInputStream(source), 5);
+//        byte[] array = new byte[10];
+//        bufferedInputStream.read(array, 0, 2);
+//        bufferedInputStream.read(array, 2, 2);
+//        bufferedInputStream.read(array, 4, 2);
+//        bufferedInputStream.read(array, 6, 2);
+//        for (byte b : array) {
+//            System.out.println(b);
+//        }
+//    }
 
 }
