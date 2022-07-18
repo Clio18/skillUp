@@ -114,4 +114,11 @@ class ByteArrayInputStreamTest {
         assertEquals("The input stream is not closed", exception.getMessage());
     }
 
+    @Test
+    void test (){
+        byte [] source = new byte[]{1, 2, 3, 4, 5, 6, 7, 8, 9};
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(source);
+
+    }
+
 }

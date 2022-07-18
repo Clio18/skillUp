@@ -41,7 +41,7 @@ public class ByteArrayInputStream extends InputStream {
             int delta = buffer.length - wasRead;
             len = Math.min(delta, array.length);
         } else {
-            len = Math.min(buffer.length, array.length);
+            len = Math.min(buffer.length, len);
         }
 
         System.arraycopy(buffer, index, array, off, len);
