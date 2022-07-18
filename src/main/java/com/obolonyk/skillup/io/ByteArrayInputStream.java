@@ -39,7 +39,7 @@ public class ByteArrayInputStream extends InputStream {
 
         if (wasRead != 0) {
             int delta = buffer.length - wasRead;
-            len = Math.min(delta, array.length);
+            len = Math.min(delta, len);
         } else {
             len = Math.min(buffer.length, len);
         }
@@ -59,9 +59,10 @@ public class ByteArrayInputStream extends InputStream {
 
     static void validateParameters(byte[] array, int off, int length) {
         if (array == null) {
-            throw new NullPointerException("Array of bytes is null");
+            throw new NullPointerException("Provided array is null");
         } else if (off < 0 || length < 0 || length > array.length - off) {
-            throw new IndexOutOfBoundsException("Position or length can`t be less than zero. Length can`t be more than " + (array.length - off));
+            throw new IndexOutOfBoundsException("Position or length can`t be less than zero. Capacity in buffer is not enough: length is "
+            + length + " and capacity is " + (array.length-off));
         }
     }
 
