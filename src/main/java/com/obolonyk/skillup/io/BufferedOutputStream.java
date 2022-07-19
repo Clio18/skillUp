@@ -8,7 +8,7 @@ public class BufferedOutputStream extends OutputStream {
     private OutputStream target;
     private byte[] buffer;
     private static final int CAPACITY = 5;
-    private int position;
+    private int count;
 
 
     public BufferedOutputStream(OutputStream target) {
@@ -18,10 +18,10 @@ public class BufferedOutputStream extends OutputStream {
 
     @Override
     public void write(int b) throws IOException {
-        if (position == CAPACITY) {
+        if (count == CAPACITY) {
             writeBuffer();
         }
-        buffer[position++] = (byte) b;
+        buffer[count++] = (byte) b;
     }
 
     @Override
@@ -30,9 +30,24 @@ public class BufferedOutputStream extends OutputStream {
     }
 
     @Override
-    public void write(byte[] bytes, int off, int len) throws IOException {
-        System.arraycopy(bytes, off, buffer, position, len);
-        position = position + len;
+    public void write(byte[] array, int off, int len) throws IOException {
+        if (len > buffer.length) {
+            if (count > 0) {
+                target.write(buffer, 0, count);
+                count = 0;
+            }
+            target.write(array, off, len);
+            return;
+        }
+        int space = buffer.length - len;
+        if (len > space) {
+            if (count > 0) {
+                target.write(buffer, 0, count);
+                count = 0;
+            }
+        }
+        System.arraycopy(array, off, buffer, count, len);
+        count = count + len;
     }
 
     @Override
@@ -40,19 +55,26 @@ public class BufferedOutputStream extends OutputStream {
         if (buffer == null) {
             throw new IOException("Stream is closed");
         }
-        writeBuffer();
+        if (count > 0) {
+            target.write(buffer, 0, count);
+            count = 0;
+        }
         target.flush();
     }
 
     @Override
     public void close() throws IOException {
+        if (count > 0) {
+            target.write(buffer, 0, count);
+            count = 0;
+        }
         target.close();
     }
 
     private void writeBuffer() throws IOException {
-        if (position > 0) {
-            target.write(buffer, 0, position);
-            position = 0;
+        if (count > 0) {
+            target.write(buffer, 0, count);
+            count = 0;
         }
     }
 }
