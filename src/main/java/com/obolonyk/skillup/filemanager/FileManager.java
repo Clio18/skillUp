@@ -78,8 +78,4 @@ public abstract class FileManager {
         }
         return listFiles;
     }
-
-    public static void main(String[] args) {
-        System.out.println(countFiles("/users/m"));
-    }
 }
