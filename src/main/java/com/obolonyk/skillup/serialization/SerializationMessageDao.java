@@ -10,7 +10,6 @@ import java.io.*;
 public class SerializationMessageDao implements MessageDao {
     ByteArrayOutputStream byteArrayOutputStream;
 
-
     @Override
     public void save(Message message) throws IOException {
         byteArrayOutputStream = new ByteArrayOutputStream();

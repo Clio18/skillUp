@@ -13,7 +13,7 @@ class SerializationMessageDaoTest {
     @Test
     @DisplayName("Test Load After Save Message")
     void testLoadAfterSaveMessage () throws IOException, ClassNotFoundException {
-        Message message = new Message(new Date(), "Message", 11.1);
+        Message message = new Message(new Date(), "Message їїїї ййй", 11.1);
         SerializationMessageDao serializationMessageDao = new SerializationMessageDao();
         serializationMessageDao.save(message);
         Message loadedMessage = serializationMessageDao.load();
